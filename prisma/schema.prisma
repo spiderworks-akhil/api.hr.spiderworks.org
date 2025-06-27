@@ -1,0 +1,748 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id                       Int       @id @default(autoincrement())
+  name                     String
+  personal_email           String?
+  work_email               String?
+  personal_phone           String?
+  office_phone             String?
+  official_date_of_birth   DateTime?
+  celebrated_date_of_birth DateTime?
+  marriage_date            DateTime?
+  joining_date             DateTime?
+  releaving_date           DateTime?
+  employee_type            String?
+  address                  String?
+  remarks                  String?
+  reporting_email          String?
+  last_sign_in_email       String?
+  last_sign_out_email      String?
+  leave_notification_mails String?
+
+  is_signin_mandatory         Int @default(1)
+  has_work_portal_access      Int @default(0)
+  has_hr_portal_access        Int @default(0)
+  has_client_portal_access    Int @default(0)
+  has_inventory_portal_access Int @default(0)
+  has_super_admin_access      Int @default(0)
+  has_accounts_portal_access  Int @default(0)
+  has_admin_portal_access     Int @default(0)
+  has_showcase_portal_access  Int @default(0)
+
+  facebook_url  String?
+  instagram_url String?
+  linkedin_url  String?
+  blog_url      String?
+
+  selfi_photo  String?
+  family_photo String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  departments_id    Int?
+  employee_roles_id Int?
+  employee_level_id Int?
+  manager_id        Int?
+  created_by        Int?
+  updated_by        Int?
+  user_id           Int? @unique
+
+  user          User?          @relation(fields: [user_id], references: [id])
+  Department    Department?    @relation(fields: [departments_id], references: [id])
+  Role          Role?          @relation(fields: [employee_roles_id], references: [id])
+  employeeLevel EmployeeLevel? @relation(fields: [employee_level_id], references: [id])
+
+  manager      Employee?  @relation("Manager", fields: [manager_id], references: [id])
+  subordinates Employee[] @relation("Manager")
+
+  additionalManagers Employee[] @relation("AdditionalManagers")
+  managedBy          Employee[] @relation("AdditionalManagers")
+
+  createdBy        Employee?  @relation("CreatedBy", fields: [created_by], references: [id])
+  createdEmployees Employee[] @relation("CreatedBy")
+
+  updatedBy        Employee?  @relation("UpdatedBy", fields: [updated_by], references: [id])
+  updatedEmployees Employee[] @relation("UpdatedBy")
+
+  employeeDocuments        EmployeeDocument[] @relation("EmployeeDocuments")
+  createdEmployeeDocuments EmployeeDocument[] @relation("CreatedEmployeeDocumentBy")
+  updatedEmployeeDocuments EmployeeDocument[] @relation("UpdatedEmployeeDocumentBy")
+
+  skillHobbies        EmployeeSkillHobby[] @relation("SkillHobbyEmployee")
+  createdSkillHobbies EmployeeSkillHobby[] @relation("CreatedSkillHobbyBy")
+  updatedSkillHobbies EmployeeSkillHobby[] @relation("UpdatedSkillHobbyBy")
+
+  emergencyContacts        EmployeeEmergencyContact[] @relation("EmergencyContacts")
+  createdEmergencyContacts EmployeeEmergencyContact[] @relation("CreatedEmergencyContactBy")
+  updatedEmergencyContacts EmployeeEmergencyContact[] @relation("UpdatedEmergencyContactBy")
+
+  employeePhotos        EmployeePhoto[] @relation("EmployeePhotos")
+  createdEmployeePhotos EmployeePhoto[] @relation("CreatedEmployeePhotoBy")
+  updatedEmployeePhotos EmployeePhoto[] @relation("UpdatedEmployeePhotoBy")
+
+  employeeNotes        EmployeeNote[] @relation("EmployeeNotes")
+  createdEmployeeNotes EmployeeNote[] @relation("CreatedEmployeeNoteBy")
+  updatedEmployeeNotes EmployeeNote[] @relation("UpdatedEmployeeNoteBy")
+
+  headDepartments    Department[] @relation("DepartmentHead")
+  createdDepartments Department[] @relation("DepartmentCreatedBy")
+  updatedDepartments Department[] @relation("DepartmentUpdatedBy")
+
+  createdRoles Role[] @relation("RoleCreatedBy")
+  updatedRoles Role[] @relation("RoleUpdatedBy")
+
+  createdEmployeeLevels EmployeeLevel[] @relation("EmployeeLevelCreatedBy")
+  updatedEmployeeLevels EmployeeLevel[] @relation("EmployeeLevelUpdatedBy")
+
+  createdDocumentCategories DocumentCategory[] @relation("DocumentCategoryCreatedBy")
+  updatedDocumentCategories DocumentCategory[] @relation("DocumentCategoryUpdatedBy")
+
+  createdDocuments Document[] @relation("DocumentCreatedBy")
+  updatedDocuments Document[] @relation("DocumentUpdatedBy")
+
+  accessibleDocuments Document[] @relation("EmployeeDocumentAccess")
+
+  created_rating_parameters EmployeeRatingParameter[] @relation("CreatedRatingParameterBy")
+  updated_rating_parameters EmployeeRatingParameter[] @relation("UpdatedRatingParameterBy")
+
+  providedFeedbacks    PeerFeedback[] @relation("ProvidedFeedback")
+  receivedFeedbacks    PeerFeedback[] @relation("ReceivedFeedback")
+  createdPeerFeedbacks PeerFeedback[] @relation("CreatedPeerFeedback")
+  updatedPeerFeedbacks PeerFeedback[] @relation("UpdatedPeerFeedback")
+
+  createdAwardPrograms AwardProgram[] @relation("AwardProgramCreatedBy")
+  updatedAwardPrograms AwardProgram[] @relation("AwardProgramUpdatedBy")
+
+  createdAwardWinners AwardWinner[] @relation("AwardWinnerCreatedBy")
+  updatedAwardWinners AwardWinner[] @relation("AwardWinnerUpdatedBy")
+  awardWinners        AwardWinner[] @relation("EmployeeAwardWinners")
+
+  salaryRevisions        EmployeeSalaryRevision[]
+  createdSalaryRevisions EmployeeSalaryRevision[] @relation("CreatedSalaryRevisions")
+  updatedSalaryRevisions EmployeeSalaryRevision[] @relation("UpdatedSalaryRevisions")
+
+  createdEvaluationTemplates EmployeeEvaluationTemplate[] @relation("CreatedEvaluationTemplateBy")
+  updatedEvaluationTemplates EmployeeEvaluationTemplate[] @relation("UpdatedEvaluationTemplateBy")
+
+  createdTemplateMappings EmployeeEvaluationTemplateParameterMapping[] @relation("CreatedParameterAssignmentBy")
+  updatedTemplateMappings EmployeeEvaluationTemplateParameterMapping[] @relation("UpdatedParameterAssignmentBy")
+
+  evaluationsGiven    EmployeeEvaluation[] @relation("EvaluatorEmployee")
+  evaluationsReceived EmployeeEvaluation[] @relation("EvaluatedEmployee")
+  createdEvaluations  EmployeeEvaluation[] @relation("CreatedEvaluationBy")
+  updatedEvaluations  EmployeeEvaluation[] @relation("UpdatedEvaluationBy")
+
+  createdEvaluationResponses EmployeeEvaluationResponse[] @relation("CreatedEvaluationResponseBy")
+  updatedEvaluationResponses EmployeeEvaluationResponse[] @relation("UpdatedEvaluationResponseBy")
+
+  reviewedPerformanceGoals PerformanceGoal[] @relation("ReviewedGoals")
+  createdPerformanceGoals  PerformanceGoal[] @relation("CreatedPerformanceGoals")
+  updatedPerformanceGoals  PerformanceGoal[] @relation("UpdatedPerformanceGoals")
+
+  assignedGoals PerformanceGoalAssignment[] @relation("AssignedGoals")
+
+  starsGiven    StarRating[] @relation("GivenStars")
+  starsReceived StarRating[] @relation("ReceivedStars")
+
+  createdStarRatings StarRating[] @relation("CreatedStarRatingBy")
+  updatedStarRatings StarRating[] @relation("UpdatedStarRatingBy")
+
+  createdCompliances Compliance[] @relation("CreatedCompliances")
+  updatedCompliances Compliance[] @relation("UpdatedCompliances")
+
+  createdBoardMeetings BoardMeeting[] @relation("CreatedBoardMeetings")
+  updatedBoardMeetings BoardMeeting[] @relation("UpdatedBoardMeetings")
+
+  leaveApplications        LeaveApplication[] @relation("EmployeeLeaveApplications")
+  managerLeaveApplications LeaveApplication[] @relation("ManagerLeaveApplications")
+  hrLeaveApplications      LeaveApplication[] @relation("HRLeaveApplications")
+
+  createdLeaveApplications LeaveApplication[] @relation("CreatedLeaveApplications")
+  updatedLeaveApplications LeaveApplication[] @relation("UpdatedLeaveApplications")
+
+  leaveLedgers        LeaveLedger[] @relation("EmployeeLeaveLedger")
+  leaveLedgersCreated LeaveLedger[] @relation("CreatedLeaveLedgers")
+  leaveLedgersUpdated LeaveLedger[] @relation("UpdatedLeaveLedgers")
+
+  companyCalendarCreated CompanyCalendar[] @relation("CreatedCompanyCalendar")
+  companyCalendarUpdated CompanyCalendar[] @relation("UpdatedCompanyCalendar")
+}
+
+model EmployeeDocument {
+  id          Int      @id @default(autoincrement())
+  title       String
+  document    String
+  employee_id Int
+  created_by  Int?
+  updated_by  Int?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  employee  Employee  @relation("EmployeeDocuments", fields: [employee_id], references: [id])
+  createdBy Employee? @relation("CreatedEmployeeDocumentBy", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("UpdatedEmployeeDocumentBy", fields: [updated_by], references: [id])
+}
+
+model EmployeeSkillHobby {
+  id          Int      @id @default(autoincrement())
+  title       String
+  expertise   String
+  employee_id Int
+  created_by  Int?
+  updated_by  Int?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  employee  Employee  @relation("SkillHobbyEmployee", fields: [employee_id], references: [id])
+  createdBy Employee? @relation("CreatedSkillHobbyBy", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("UpdatedSkillHobbyBy", fields: [updated_by], references: [id])
+}
+
+model EmployeeEmergencyContact {
+  id           Int      @id @default(autoincrement())
+  contact_name String
+  phone_number String
+  relationship String
+  employee_id  Int
+  created_by   Int?
+  updated_by   Int?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  employee  Employee  @relation("EmergencyContacts", fields: [employee_id], references: [id])
+  createdBy Employee? @relation("CreatedEmergencyContactBy", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("UpdatedEmergencyContactBy", fields: [updated_by], references: [id])
+}
+
+model EmployeePhoto {
+  id          Int      @id @default(autoincrement())
+  type        String
+  photo       String
+  employee_id Int
+  created_by  Int?
+  updated_by  Int?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  employee  Employee  @relation("EmployeePhotos", fields: [employee_id], references: [id])
+  createdBy Employee? @relation("CreatedEmployeePhotoBy", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("UpdatedEmployeePhotoBy", fields: [updated_by], references: [id])
+}
+
+model EmployeeNote {
+  id          Int      @id @default(autoincrement())
+  notes       String
+  employee_id Int
+  created_by  Int?
+  updated_by  Int?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  employee  Employee  @relation("EmployeeNotes", fields: [employee_id], references: [id])
+  createdBy Employee? @relation("CreatedEmployeeNoteBy", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("UpdatedEmployeeNoteBy", fields: [updated_by], references: [id])
+}
+
+model Department {
+  id                 Int      @id @default(autoincrement())
+  name               String
+  parent_id          Int?
+  department_head_id Int?
+  description        String?
+  created_by         Int?
+  updated_by         Int?
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  employees Employee[]
+
+  parent   Department?  @relation("ParentDepartment", fields: [parent_id], references: [id])
+  children Department[] @relation("ParentDepartment")
+
+  departmentHead Employee? @relation("DepartmentHead", fields: [department_head_id], references: [id])
+  createdBy      Employee? @relation("DepartmentCreatedBy", fields: [created_by], references: [id])
+  updatedBy      Employee? @relation("DepartmentUpdatedBy", fields: [updated_by], references: [id])
+}
+
+model Role {
+  id         Int      @id @default(autoincrement())
+  name       String
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  employees Employee[]
+
+  createdBy Employee? @relation("RoleCreatedBy", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("RoleUpdatedBy", fields: [updated_by], references: [id])
+}
+
+model EmployeeLevel {
+  id         Int      @id @default(autoincrement())
+  name       String
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  createdBy Employee? @relation("EmployeeLevelCreatedBy", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("EmployeeLevelUpdatedBy", fields: [updated_by], references: [id])
+
+  employees Employee[]
+}
+
+model DocumentCategory {
+  id         Int      @id @default(autoincrement())
+  name       String
+  remarks    String?
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  createdBy Employee?  @relation("DocumentCategoryCreatedBy", fields: [created_by], references: [id])
+  updatedBy Employee?  @relation("DocumentCategoryUpdatedBy", fields: [updated_by], references: [id])
+  documents Document[]
+}
+
+enum PermissionType {
+  PUBLIC
+  PRIVATE
+}
+
+model Document {
+  id         Int            @id @default(autoincrement())
+  name       String
+  content    String?
+  document   String?
+  remarks    String?
+  permission PermissionType @default(PUBLIC)
+  status     String?
+  created_by Int?
+  updated_by Int?
+  created_at DateTime       @default(now())
+  updated_at DateTime       @updatedAt
+
+  document_category_id Int?
+  category             DocumentCategory? @relation(fields: [document_category_id], references: [id])
+
+  createdBy Employee? @relation("DocumentCreatedBy", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("DocumentUpdatedBy", fields: [updated_by], references: [id])
+
+  grantedAccess Employee[] @relation("EmployeeDocumentAccess")
+}
+
+model EmployeeRatingParameter {
+  id                 Int     @id @default(autoincrement())
+  name               String
+  description        String?
+  ratable_by_client  Int     @default(0)
+  ratable_by_manager Int     @default(0)
+  ratable_by_self    Int     @default(0)
+
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  createdBy Employee? @relation("CreatedRatingParameterBy", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("UpdatedRatingParameterBy", fields: [updated_by], references: [id])
+
+  parameterAssignments EmployeeEvaluationTemplateParameterMapping[]
+}
+
+model PeerFeedback {
+  id       Int    @id @default(autoincrement())
+  feedback String
+
+  provided_by Int?
+  provided_to Int?
+  created_by  Int?
+  updated_by  Int?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  providedBy Employee? @relation("ProvidedFeedback", fields: [provided_by], references: [id])
+  providedTo Employee? @relation("ReceivedFeedback", fields: [provided_to], references: [id])
+  createdBy  Employee? @relation("CreatedPeerFeedback", fields: [created_by], references: [id])
+  updatedBy  Employee? @relation("UpdatedPeerFeedback", fields: [updated_by], references: [id])
+}
+
+model AwardProgram {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  expiry_date DateTime?
+  thumbnail   String?
+  is_active   Int       @default(0)
+
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  createdBy    Employee?     @relation("AwardProgramCreatedBy", fields: [created_by], references: [id])
+  updatedBy    Employee?     @relation("AwardProgramUpdatedBy", fields: [updated_by], references: [id])
+  awardWinners AwardWinner[] @relation("AwardProgramAwardWinners")
+}
+
+model AwardWinner {
+  id           Int       @id @default(autoincrement())
+  title        String
+  description  String?
+  awarder_date DateTime?
+
+  employee_id      Int?
+  award_program_id Int?
+  created_by       Int?
+  updated_by       Int?
+
+  employee     Employee?     @relation("EmployeeAwardWinners", fields: [employee_id], references: [id])
+  awardProgram AwardProgram? @relation("AwardProgramAwardWinners", fields: [award_program_id], references: [id])
+  createdBy    Employee?     @relation("AwardWinnerCreatedBy", fields: [created_by], references: [id])
+  updatedBy    Employee?     @relation("AwardWinnerUpdatedBy", fields: [updated_by], references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model EmployeeSalaryRevision {
+  id             Int       @id @default(autoincrement())
+  version        Int
+  employee_id    Int
+  effective_date DateTime?
+  basic_pay      Float
+
+  tds_deduction_amount Float?
+  esi_employee_share   Float?
+  esi_employer_share   Float?
+  pf_employee_share    Float?
+  pf_employer_share    Float?
+  hra                  Float?
+  travel_allowance     Float?
+  other_allowance      Float?
+  grand_total          Float?
+  remarks              String?
+
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  employee  Employee  @relation(fields: [employee_id], references: [id])
+  createdBy Employee? @relation("CreatedSalaryRevisions", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("UpdatedSalaryRevisions", fields: [updated_by], references: [id])
+}
+
+enum EvaluationTemplateStatus {
+  Draft
+  Active
+  Cancelled
+}
+
+model EmployeeEvaluationTemplate {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  rate_by_self    Int? @default(0)
+  rate_by_client  Int? @default(0)
+  rate_by_manager Int? @default(0)
+
+  status EvaluationTemplateStatus? @default(Draft)
+
+  created_by Int?
+  updated_by Int?
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  createdBy Employee? @relation("CreatedEvaluationTemplateBy", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("UpdatedEvaluationTemplateBy", fields: [updated_by], references: [id])
+
+  parameterMapping EmployeeEvaluationTemplateParameterMapping[] @relation("TemplateToMapping")
+
+  evaluations EmployeeEvaluation[] @relation("TemplateToEvaluation")
+}
+
+model EmployeeEvaluationTemplateParameterMapping {
+  id           Int       @id @default(autoincrement())
+  template_id  Int
+  parameter_id Int
+  created_by   Int?
+  updated_by   Int?
+  created_at   DateTime? @default(now())
+  updated_at   DateTime? @updatedAt
+
+  template  EmployeeEvaluationTemplate   @relation("TemplateToMapping", fields: [template_id], references: [id], onDelete: Cascade)
+  parameter EmployeeRatingParameter      @relation(fields: [parameter_id], references: [id])
+  createdBy Employee?                    @relation("CreatedParameterAssignmentBy", fields: [created_by], references: [id])
+  updatedBy Employee?                    @relation("UpdatedParameterAssignmentBy", fields: [updated_by], references: [id])
+  responses EmployeeEvaluationResponse[] @relation("ParameterToResponses")
+}
+
+model EmployeeEvaluation {
+  id                         Int       @id @default(autoincrement())
+  template_id                Int?
+  evaluation_for_employee_id Int?
+  evaluation_by_employee_id  Int?
+  evaluation_by_name         String?
+  evaluation_by_email        String?
+  evaluation_remarks         String?
+  improvements_suggested     String?
+  is_open                    Int?      @default(0)
+  created_by                 Int?
+  updated_by                 Int?
+  created_at                 DateTime? @default(now())
+  updated_at                 DateTime? @updatedAt
+
+  template EmployeeEvaluationTemplate? @relation("TemplateToEvaluation", fields: [template_id], references: [id], onDelete: Cascade)
+
+  evaluatedEmployee Employee? @relation("EvaluatedEmployee", fields: [evaluation_for_employee_id], references: [id])
+  evaluatorEmployee Employee? @relation("EvaluatorEmployee", fields: [evaluation_by_employee_id], references: [id])
+
+  createdBy Employee? @relation("CreatedEvaluationBy", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("UpdatedEvaluationBy", fields: [updated_by], references: [id])
+
+  responses EmployeeEvaluationResponse[] @relation("EvaluationToResponses")
+}
+
+model EmployeeEvaluationResponse {
+  id                     Int       @id @default(autoincrement())
+  employee_evaluation_id Int?
+  parameter_mapping_id   Int?
+  response_value         Int?
+  created_by             Int?
+  updated_by             Int?
+  created_at             DateTime? @default(now())
+  updated_at             DateTime? @updatedAt
+
+  evaluation          EmployeeEvaluation?                         @relation("EvaluationToResponses", fields: [employee_evaluation_id], references: [id], onDelete: Cascade)
+  parameterAssignment EmployeeEvaluationTemplateParameterMapping? @relation("ParameterToResponses", fields: [parameter_mapping_id], references: [id], onDelete: Cascade)
+
+  createdBy Employee? @relation("CreatedEvaluationResponseBy", fields: [created_by], references: [id])
+  updatedBy Employee? @relation("UpdatedEvaluationResponseBy", fields: [updated_by], references: [id])
+}
+
+enum GoalResult {
+  NOT_STARTED
+  ACHIEVED
+  PARTIALLY_ACHIEVED
+  NOT_ACHIEVED
+}
+
+model PerformanceGoal {
+  id                         Int       @id @default(autoincrement())
+  title                      String
+  description                String?
+  reviewer_id                Int?
+  target_date                DateTime?
+  reviewed_date              DateTime?
+  achieved_date              DateTime?
+  result_percentage_achieved Int?
+
+  result           GoalResult?
+  result_remarks   String?
+  green_star_count Int?
+  red_star_count   Int?
+
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  reviewer  Employee? @relation("ReviewedGoals", fields: [reviewer_id], references: [id], onDelete: SetNull)
+  createdBy Employee? @relation("CreatedPerformanceGoals", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy Employee? @relation("UpdatedPerformanceGoals", fields: [updated_by], references: [id], onDelete: SetNull)
+
+  assignments PerformanceGoalAssignment[]
+  starRatings StarRating[]                @relation("GoalStarRatings")
+}
+
+model PerformanceGoalAssignment {
+  id         Int      @id @default(autoincrement())
+  goal_id    Int
+  user_id    Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  goal PerformanceGoal @relation(fields: [goal_id], references: [id], onDelete: Cascade)
+  user Employee        @relation("AssignedGoals", fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+enum StarType {
+  GREEN
+  RED
+}
+
+enum EntityType {
+  MANUAL
+  PERFORMANCE_GOAL
+}
+
+model StarRating {
+  id          Int       @id @default(autoincrement())
+  given_by_id Int?
+  given_to_id Int?
+  star_type   StarType? @default(GREEN)
+  star_count  Int?
+  label       String?
+
+  entity_type EntityType? @default(MANUAL)
+  entity_id   Int?
+
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  givenBy Employee? @relation("GivenStars", fields: [given_by_id], references: [id], onDelete: Cascade)
+  givenTo Employee? @relation("ReceivedStars", fields: [given_to_id], references: [id], onDelete: Cascade)
+
+  createdBy Employee? @relation("CreatedStarRatingBy", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy Employee? @relation("UpdatedStarRatingBy", fields: [updated_by], references: [id], onDelete: SetNull)
+
+  performanceGoal PerformanceGoal? @relation("GoalStarRatings", fields: [entity_id], references: [id], onDelete: SetNull)
+}
+
+model Compliance {
+  id                  Int       @id @default(autoincrement())
+  title               String
+  description         String?
+  last_filing_date    DateTime?
+  next_due_date       DateTime?
+  filing_instructions String?
+
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  createdBy Employee? @relation("CreatedCompliances", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy Employee? @relation("UpdatedCompliances", fields: [updated_by], references: [id], onDelete: SetNull)
+}
+
+model BoardMeeting {
+  id               Int       @id @default(autoincrement())
+  title            String    @default("Director Board Meeting")
+  date             DateTime?
+  meeting_location String?
+  participants     String?
+  agenda           String?
+  meeting_minutes  String?
+
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  createdBy Employee? @relation("CreatedBoardMeetings", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy Employee? @relation("UpdatedBoardMeetings", fields: [updated_by], references: [id], onDelete: SetNull)
+}
+
+enum AttendanceType {
+  FULL_DAY
+  HALF_DAY
+}
+
+enum LeaveType {
+  CASUAL_LEAVE
+  SICK_LEAVE
+  COMPENSATORY_LEAVE
+  SPECIAL_LEAVE
+}
+
+enum ApprovalStatus {
+  NOT_REVIEWED
+  APPROVED
+  REJECTED
+  PENDING
+}
+
+model LeaveApplication {
+  id              Int             @id @default(autoincrement())
+  employee_id     Int?
+  attendance_type AttendanceType?
+  leave_type      LeaveType?
+  reason          String?
+  start_date      DateTime?
+  end_date        DateTime?
+  count           Float?
+
+  manager_id              Int?
+  manager_approval_status ApprovalStatus? @default(NOT_REVIEWED)
+  manager_review_date     DateTime?
+  manager_remarks         String?
+
+  hr_id              Int?
+  hr_approval_status ApprovalStatus? @default(NOT_REVIEWED)
+  hr_review_date     DateTime?
+  hr_remarks         String?
+
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  employee Employee? @relation("EmployeeLeaveApplications", fields: [employee_id], references: [id], onDelete: SetNull)
+  manager  Employee? @relation("ManagerLeaveApplications", fields: [manager_id], references: [id], onDelete: SetNull)
+  hr       Employee? @relation("HRLeaveApplications", fields: [hr_id], references: [id], onDelete: SetNull)
+
+  createdBy Employee? @relation("CreatedLeaveApplications", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy Employee? @relation("UpdatedLeaveApplications", fields: [updated_by], references: [id], onDelete: SetNull)
+
+  leaveLedgers LeaveLedger[] @relation("LeaveApplicationLedger")
+}
+
+model LeaveLedger {
+  id                   Int        @id @default(autoincrement())
+  employee_id          Int?
+  leave_application_id Int?
+  leave_type           LeaveType?
+  count                Float?
+  eligibility_date     DateTime?
+  remarks              String?
+
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  employee         Employee?         @relation("EmployeeLeaveLedger", fields: [employee_id], references: [id], onDelete: Cascade)
+  leaveApplication LeaveApplication? @relation("LeaveApplicationLedger", fields: [leave_application_id], references: [id], onDelete: SetNull)
+  createdBy        Employee?         @relation("CreatedLeaveLedgers", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy        Employee?         @relation("UpdatedLeaveLedgers", fields: [updated_by], references: [id], onDelete: SetNull)
+}
+
+model CompanyCalendar {
+  id         Int       @id @default(autoincrement())
+  date       DateTime?
+  is_holiday Int?      @default(0)
+  remarks    String?
+
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  createdBy Employee? @relation("CreatedCompanyCalendar", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy Employee? @relation("UpdatedCompanyCalendar", fields: [updated_by], references: [id], onDelete: SetNull)
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  name       String?
+  email      String?
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+  employee   Employee?
+}

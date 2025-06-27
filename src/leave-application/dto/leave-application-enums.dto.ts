@@ -1,0 +1,18 @@
+export enum AttendanceType {
+  FULL_DAY = 'FULL_DAY',
+  HALF_DAY = 'HALF_DAY',
+}
+
+export enum LeaveType {
+  SICK_LEAVE = 'SICK_LEAVE',
+  CASUAL_LEAVE = 'CASUAL_LEAVE',
+  COMPENSATORY_LEAVE = 'COMPENSATORY_LEAVE',
+  SPECIAL_LEAVE = 'SPECIAL_LEAVE',
+}
+
+export enum ApprovalStatus {
+  NOT_REVIEWED = 'NOT_REVIEWED',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  PENDING = 'PENDING',
+}
