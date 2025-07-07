@@ -103,6 +103,10 @@ export class EmployeesService {
         blog_url: dto.blog_url ?? null,
         selfi_photo: dto.selfi_photo ?? null,
         family_photo: dto.family_photo ?? null,
+        designation: dto.designation ?? null,
+        confirmation_date: dto.confirmation_date
+          ? new Date(dto.confirmation_date)
+          : null,
         Department: dto.departments_id
           ? { connect: { id: dto.departments_id } }
           : undefined,
@@ -327,6 +331,10 @@ export class EmployeesService {
         blog_url: dto.blog_url,
         selfi_photo: dto.selfi_photo,
         family_photo: dto.family_photo,
+        designation: dto.designation,
+        confirmation_date: dto.confirmation_date
+          ? new Date(dto.confirmation_date)
+          : undefined,
         Department: dto.departments_id
           ? { connect: { id: dto.departments_id } }
           : dto.departments_id === null

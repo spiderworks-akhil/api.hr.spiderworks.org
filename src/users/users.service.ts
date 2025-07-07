@@ -153,4 +153,46 @@ export class UsersService {
       throw new BadRequestException(error.message || 'Failed to retrieve user');
     }
   }
+
+  async syncUsers(users: CreateUserDto[]) {
+    try {
+      let createdCount = 0;
+      let skippedCount = 0;
+
+      for (const user of users) {
+        const existingUser = await this.prisma.user.findUnique({
+          where: { id: user.id },
+        });
+
+        if (!existingUser) {
+          const data: Prisma.UserCreateInput = {
+            id: user.id,
+            first_name: user.first_name ?? null,
+            last_name: user.last_name ?? null,
+            email: user.email ?? null,
+            phone: user.phone ?? null,
+            role: user.role ?? $Enums.UserRole.STANDARD_USER,
+          };
+
+          await this.prisma.user.create({
+            data,
+            include: {
+              employee: true,
+            },
+          });
+          createdCount++;
+        } else {
+          skippedCount++;
+        }
+      }
+
+      return {
+        message: `Sync completed: ${createdCount} users created, ${skippedCount} users skipped (already exist)`,
+        created: createdCount,
+        skipped: skippedCount,
+      };
+    } catch (error) {
+      throw new BadRequestException(error.message || 'Failed to sync users');
+    }
+  }
 }

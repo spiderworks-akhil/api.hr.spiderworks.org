@@ -16,6 +16,7 @@ export class EmployeeLevelService {
     try {
       const data: Prisma.EmployeeLevelCreateInput = {
         name: dto.name,
+        level_index: dto.level_index,
         createdBy: dto.created_by
           ? { connect: { id: dto.created_by } }
           : undefined,
@@ -80,6 +81,7 @@ export class EmployeeLevelService {
     try {
       const data: Prisma.EmployeeLevelUpdateInput = {
         name: dto.name,
+        level_index: dto.level_index,
         createdBy: dto.created_by
           ? { connect: { id: dto.created_by } }
           : dto.created_by === null

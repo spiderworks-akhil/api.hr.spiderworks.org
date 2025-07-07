@@ -9,6 +9,11 @@ export class UpdateEmployeeLevelDto {
   @IsInt()
   @IsOptional()
   @Type(() => Number)
+  level_index?: number;
+
+  @IsInt()
+  @IsOptional()
+  @Type(() => Number)
   created_by?: number;
 
   @IsInt()

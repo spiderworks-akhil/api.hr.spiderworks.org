@@ -45,6 +45,9 @@ model Employee {
   selfi_photo  String?
   family_photo String?
 
+  designation       String?
+  confirmation_date DateTime?
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -288,12 +291,13 @@ model Role {
 }
 
 model EmployeeLevel {
-  id         Int      @id @default(autoincrement())
-  name       String
-  created_by Int?
-  updated_by Int?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String
+  level_index Int?
+  created_by  Int?
+  updated_by  Int?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 
   createdBy Employee? @relation("EmployeeLevelCreatedBy", fields: [created_by], references: [id])
   updatedBy Employee? @relation("EmployeeLevelUpdatedBy", fields: [updated_by], references: [id])

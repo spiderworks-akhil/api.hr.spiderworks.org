@@ -162,6 +162,14 @@ export class CreateEmployeeDto {
   family_photo?: string;
 
   @IsOptional()
+  @IsString()
+  designation?: string;
+
+  @IsOptional()
+  @IsDateString()
+  confirmation_date?: string;
+
+  @IsOptional()
   @IsInt()
   departments_id?: number;
 

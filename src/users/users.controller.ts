@@ -79,4 +79,12 @@ export class UsersController {
   async view(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.getUserById(id);
   }
+
+  @Post('syncing')
+  async syncUsers(@Body() body: { users: CreateUserDto[] }) {
+    if (!body.users || !Array.isArray(body.users)) {
+      throw new BadRequestException('Invalid users data');
+    }
+    return this.usersService.syncUsers(body.users);
+  }
 }
