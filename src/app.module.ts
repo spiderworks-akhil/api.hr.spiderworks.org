@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { EmployeesModule } from './employees/employees.module';
-import { UsersModule } from './users/users.module';
 import { EmployeeDocumentsModule } from './employee-documents/employee-documents.module';
 import { EmployeeSkillHobbyModule } from './employee-skill-hobby/employee-skill-hobby.module';
 import { EmployeeEmergencyContactModule } from './employee-emergency-contact/employee-emergency-contact.module';
@@ -29,12 +28,13 @@ import { BoardMeetingModule } from './board-meeting/board-meeting.module';
 import { LeaveApplicationModule } from './leave-application/leave-application.module';
 import { LeaveLedgerModule } from './leave-ledger/leave-ledger.module';
 import { CompanyCalendarModule } from './company-calendar/company-calendar.module';
+import { UsersModule } from './users/users.module';
+import { RecruitmentRequestsModule } from './recruitment-requests/recruitment-requests.module';
 
 @Module({
   imports: [
     PrismaModule,
     EmployeesModule,
-    UsersModule,
     EmployeeDocumentsModule,
     EmployeeSkillHobbyModule,
     EmployeeEmergencyContactModule,
@@ -60,6 +60,8 @@ import { CompanyCalendarModule } from './company-calendar/company-calendar.modul
     LeaveApplicationModule,
     LeaveLedgerModule,
     CompanyCalendarModule,
+    UsersModule,
+    RecruitmentRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

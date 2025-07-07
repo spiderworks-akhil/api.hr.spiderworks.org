@@ -738,11 +738,64 @@ model CompanyCalendar {
   updatedBy Employee? @relation("UpdatedCompanyCalendar", fields: [updated_by], references: [id], onDelete: SetNull)
 }
 
+enum UserRole {
+  STANDARD_USER
+  HR_ASSISTANT
+  HR_HEAD
+}
+
 model User {
-  id         Int       @id @default(autoincrement())
-  name       String?
-  email      String?
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
-  employee   Employee?
+  id         Int       @id
+  first_name String?
+  last_name  String?
+  email      String?   @unique
+  phone      String?
+  role       UserRole? @default(STANDARD_USER)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  employee Employee?
+
+  requestedRecruitments RecruitmentRequest[] @relation("RequestedRecruitments")
+  createdRecruitments   RecruitmentRequest[] @relation("CreatedRecruitments")
+  updatedRecruitments   RecruitmentRequest[] @relation("UpdatedRecruitments")
+}
+
+enum PriorityLevel {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum RecruitmentStatus {
+  REQUESTED
+  NOT_APPROVED
+  APPROVED
+  INTERVIEWING
+  HIRED
+  ARCHIVED
+}
+
+model RecruitmentRequest {
+  id                      Int               @id @default(autoincrement())
+  job_title               String
+  internal_requirement    String?
+  public_job_post_content String?
+  estimated_hiring_days   Int?
+  priority                PriorityLevel     @default(MEDIUM)
+  status                  RecruitmentStatus @default(REQUESTED)
+  hiring_remarks_by_hr    String?
+
+  requested_by   Int?
+  requested_date DateTime @default(now())
+
+  created_by Int?
+  updated_by Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  requestedBy User? @relation("RequestedRecruitments", fields: [requested_by], references: [id], onDelete: SetNull)
+  createdBy   User? @relation("CreatedRecruitments", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy   User? @relation("UpdatedRecruitments", fields: [updated_by], references: [id], onDelete: SetNull)
 }

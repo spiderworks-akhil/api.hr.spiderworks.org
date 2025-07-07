@@ -11,13 +11,15 @@ import {
   ParseIntPipe,
   BadRequestException,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserRoleDto } from './dto/update-role-user.dto';
+import { RecruitmentRequestService } from './recruitment-requests.service';
+import { CreateRecruitmentRequestDto } from './dto/create-recruitment-request.dto';
+import { UpdateRecruitmentRequestDto } from './dto/update-recruitment-request.dto';
 
-@Controller('users')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+@Controller('recruitment-requests')
+export class RecruitmentRequestController {
+  constructor(
+    private readonly recruitmentRequestService: RecruitmentRequestService,
+  ) {}
 
   @Post('create')
   @UsePipes(
@@ -27,8 +29,8 @@ export class UsersController {
       transform: true,
     }),
   )
-  async create(@Body() dto: CreateUserDto) {
-    return this.usersService.create(dto);
+  async create(@Body() dto: CreateRecruitmentRequestDto) {
+    return this.recruitmentRequestService.create(dto);
   }
 
   @Get('list')
@@ -36,7 +38,8 @@ export class UsersController {
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
     @Query('keyword') keyword: string = '',
-    @Query('role') role?: string,
+    @Query('status') status?: string,
+    @Query('priority') priority?: string,
   ) {
     const parsedPage = parseInt(page, 10);
     if (isNaN(parsedPage) || parsedPage < 1) {
@@ -52,15 +55,16 @@ export class UsersController {
       );
     }
 
-    return this.usersService.getAllUsers(
+    return this.recruitmentRequestService.getAllRequests(
       parsedPage,
       parsedLimit,
       keyword,
-      role,
+      status,
+      priority,
     );
   }
 
-  @Put('update-role/:id')
+  @Put('update/:id')
   @UsePipes(
     new ValidationPipe({
       whitelist: true,
@@ -68,15 +72,15 @@ export class UsersController {
       transform: true,
     }),
   )
-  async updateRole(
+  async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateUserRoleDto,
+    @Body() dto: UpdateRecruitmentRequestDto,
   ) {
-    return this.usersService.updateUserRole(id, dto);
+    return this.recruitmentRequestService.updateRequest(id, dto);
   }
 
   @Get('view/:id')
   async view(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.getUserById(id);
+    return this.recruitmentRequestService.getRequestById(id);
   }
 }
