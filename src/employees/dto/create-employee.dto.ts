@@ -9,18 +9,14 @@ import {
   Max,
   IsArray,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 
 export class CreateEmployeeDto {
+  @IsOptional()
   @IsInt()
-  @IsNotEmpty()
-  @Min(1)
-  @Type(() => Number) // Transform to number
-  id: number;
+  user_id?: number;
 
   @IsOptional()
   @IsString()
-  @Type(() => String) // Transform to string
   employee_code?: string;
 
   @IsString()
@@ -65,7 +61,6 @@ export class CreateEmployeeDto {
 
   @IsOptional()
   @IsInt()
-  @Min(1)
   employee_level_id?: number;
 
   @IsOptional()
@@ -184,38 +179,26 @@ export class CreateEmployeeDto {
 
   @IsOptional()
   @IsInt()
-  @Min(1)
   departments_id?: number;
 
   @IsOptional()
   @IsInt()
-  @Min(1)
   employee_roles_id?: number;
 
   @IsOptional()
   @IsInt()
-  @Min(1)
   manager_id?: number;
 
   @IsOptional()
   @IsArray()
   @IsInt({ each: true })
-  @Min(1, { each: true })
   additional_manager_ids?: number[];
 
   @IsOptional()
   @IsInt()
-  @Min(1)
   created_by?: number;
 
   @IsOptional()
   @IsInt()
-  @Min(1)
   updated_by?: number;
-
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  @Type(() => Number) // Transform to number
-  user_id?: number;
 }

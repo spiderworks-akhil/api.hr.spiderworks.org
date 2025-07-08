@@ -19,13 +19,12 @@ import { EmployeesService } from './employees.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { UpdateEmployeePermissionsDto } from './dto/update-employee-permissions.dto';
-import { validate } from 'class-validator';
 import * as XLSX from 'xlsx';
 
 interface ExcelRow {
-  id?: string | number;
-  UserId?: string | number;
-  EmployeeCode?: string | number;
+  id?: number;
+  UserId?: number;
+  EmployeeCode?: string;
   FullName: string;
   PersonalEmail?: string;
   WorkEmail?: string;
@@ -44,178 +43,132 @@ interface ExcelRow {
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
 
-  @Post('import')
-  @UseInterceptors(FileInterceptor('file'))
-  @UsePipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  )
-  async importEmployees(@UploadedFile() file: Express.Multer.File) {
-    if (!file) {
-      throw new BadRequestException('No file uploaded');
-    }
-  
-    if (
-      !file.mimetype.includes('excel') &&
-      !file.mimetype.includes('spreadsheetml')
-    ) {
-      throw new BadRequestException('Only Excel (XLSX) files are supported');
-    }
-  
-    const workbook = XLSX.read(file.buffer, {
-      type: 'buffer',
-      cellDates: true,
-    });
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const records: ExcelRow[] = XLSX.utils.sheet_to_json(sheet);
-  
-    const employees: CreateEmployeeDto[] = [];
-    const errors: { row: number; error: string }[] = [];
-  
-    for (const [index, record] of records.entries()) {
-      try {
-        // Validate ID
-        const id =
-          record.id !== undefined &&
-          record.id !== null &&
-          record.id !== '' &&
-          !isNaN(Number(record.id)) &&
-          Number.isInteger(Number(record.id)) &&
-          Number(record.id) > 0
-            ? Number(record.id)
-            : undefined;
-        if (id === undefined) {
-          throw new BadRequestException(
-            `Missing or invalid ID in row ${index + 2}: ${record.FullName}. ID must be a positive integer. Found: "${record.id}"`,
-          );
-        }
-  
-        // Convert EmployeeCode to string explicitly
-        const employee_code =
-          record.EmployeeCode !== undefined &&
-          record.EmployeeCode !== null &&
-          record.EmployeeCode !== ''
-            ? String(record.EmployeeCode)
-            : undefined;
-  
-        // Validate UserId
-        const user_id =
-          record.UserId !== undefined &&
-          record.UserId !== null &&
-          !isNaN(Number(record.UserId)) &&
-          Number.isInteger(Number(record.UserId)) &&
-          Number(record.UserId) > 0
-            ? Number(record.UserId)
-            : undefined;
-  
-        // Parse dates
-        const parseDate = (
-          value: string | number | Date | undefined,
-        ): Date | null => {
-          if (!value) return null;
-          if (value instanceof Date) {
-            return isNaN(value.getTime()) ? null : value;
-          }
-          if (typeof value === 'number') {
-            return new Date(XLSX.SSF.format('yyyy-mm-dd', value));
-          }
-          const match = String(value).match(/^(\d{2})\/(\d{2})\/(\d{2,4})$/);
-          if (match) {
-            const [_, month, day, year] = match;
-            const fullYear =
-              parseInt(year, 10) < 100
-                ? parseInt(year, 10) < 50
-                  ? `20${year}`
-                  : `19${year}`
-                : year;
-            const date = new Date(`${fullYear}-${month}-${day}`);
-            return isNaN(date.getTime()) ? null : date;
-          }
-          return null;
-        };
-  
-        const joiningDate = parseDate(record.JoiningDate);
-        const confirmationDate = parseDate(record.confirmationDate);
-        const releavingDate = parseDate(record.ReleavingDate);
-  
-        if (record.JoiningDate && !joiningDate) {
-          throw new BadRequestException(
-            `Invalid JoiningDate in row ${index + 2}: ${record.FullName}`,
-          );
-        }
-        if (record.confirmationDate && !confirmationDate) {
-          throw new BadRequestException(
-            `Invalid confirmationDate in row ${index + 2}: ${record.FullName}`,
-          );
-        }
-        if (record.ReleavingDate && !releavingDate) {
-          throw new BadRequestException(
-            `Invalid ReleavingDate in row ${index + 2}: ${record.FullName}`,
-          );
-        }
-  
-        const phone =
-          record.Phone && String(record.Phone) !== '#ERROR!'
-            ? String(record.Phone)
-            : undefined;
-  
-        const employeeDto: CreateEmployeeDto = {
-          id,
-          user_id,
-          employee_code,
-          name: record.FullName,
-          personal_email: record.PersonalEmail || undefined,
-          work_email: record.WorkEmail || undefined,
-          personal_phone: phone,
-          joining_date: joiningDate ? joiningDate.toISOString() : undefined,
-          releaving_date: releavingDate ? releavingDate.toISOString() : undefined,
-          address: record.Address || undefined,
-          facebook_url: record.FacebookURL || undefined,
-          remarks: record.Remarks || undefined,
-          reporting_email: record.ReportingEmails || undefined,
-          designation: record.designation || undefined,
-          confirmation_date: confirmationDate
-            ? confirmationDate.toISOString()
-            : undefined,
-        };
-  
-        // Validate DTO
-        const validationErrors = await validate(employeeDto);
-        if (validationErrors.length > 0) {
-          throw new BadRequestException(
-            `Validation failed for row ${index + 2}: ${JSON.stringify(validationErrors)}`,
-          );
-        }
-  
-        employees.push(employeeDto);
-      } catch (error) {
-        errors.push({ row: index + 2, error: error.message });
-      }
-    }
-  
-    const results: { row: number; employee: any }[] = [];
-  
-    for (const [index, dto] of employees.entries()) {
-      try {
-        const result = await this.employeesService.create(dto);
-        results.push({ row: index + 2, employee: result.employee });
-      } catch (error) {
-        errors.push({ row: index + 2, error: error.message });
-      }
-    }
-  
-    return {
-      message: 'Import completed',
-      successful: results,
-      errors,
-      totalProcessed: employees.length,
-      totalErrors: errors.length,
-    };
-  }
+  // @Post('import')
+  // @UseInterceptors(FileInterceptor('file'))
+  // @UsePipes(
+  //   new ValidationPipe({
+  //     whitelist: true,
+  //     forbidNonWhitelisted: true,
+  //     transform: true,
+  //   }),
+  // )
+  // async importEmployees(@UploadedFile() file: Express.Multer.File) {
+  //   if (!file) {
+  //     throw new BadRequestException('No file uploaded');
+  //   }
+
+  //   if (
+  //     !file.mimetype.includes('excel') &&
+  //     !file.mimetype.includes('spreadsheetml')
+  //   ) {
+  //     throw new BadRequestException('Only Excel (XLSX) files are supported');
+  //   }
+
+  //   const workbook = XLSX.read(file.buffer, {
+  //     type: 'buffer',
+  //     cellDates: true,
+  //   });
+  //   const sheetName = workbook.SheetNames[0];
+  //   const sheet = workbook.Sheets[sheetName];
+  //   const records: ExcelRow[] = XLSX.utils.sheet_to_json(sheet);
+
+  //   const employees: CreateEmployeeDto[] = [];
+
+  //   for (const [index, record] of records.entries()) {
+  //     const parseDate = (
+  //       value: string | number | Date | undefined,
+  //     ): Date | null => {
+  //       if (!value) return null;
+  //       if (value instanceof Date) {
+  //         return isNaN(value.getTime()) ? null : value;
+  //       }
+  //       if (typeof value === 'number') {
+  //         return new Date(XLSX.SSF.format(' yyyy-mm-dd ', value));
+  //       }
+
+  //       const match = String(value).match(/^(\d{2})\/(\d{2})\/(\d{2,4})$/);
+  //       if (match) {
+  //         const [_, month, day, year] = match;
+  //         const fullYear =
+  //           parseInt(year, 10) < 100
+  //             ? parseInt(year, 10) < 50
+  //               ? `20${year}`
+  //               : `19${year}`
+  //             : year;
+  //         const date = new Date(`${fullYear}-${month}-${day}`);
+  //         return isNaN(date.getTime()) ? null : date;
+  //       }
+  //       return null;
+  //     };
+
+  //     const joiningDate = parseDate(record.JoiningDate);
+  //     const confirmationDate = parseDate(record.confirmationDate);
+  //     const releavingDate = parseDate(record.ReleavingDate);
+
+  //     if (record.JoiningDate && !joiningDate) {
+  //       throw new BadRequestException(
+  //         `Invalid JoiningDate in row ${index + 2}: ${record.FullName}`,
+  //       );
+  //     }
+  //     if (record.confirmationDate && !confirmationDate) {
+  //       throw new BadRequestException(
+  //         `Invalid confirmationDate in row ${index + 2}: ${record.FullName}`,
+  //       );
+  //     }
+  //     if (record.ReleavingDate && !releavingDate) {
+  //       throw new BadRequestException(
+  //         `Invalid ReleavingDate in row ${index + 2}: ${record.FullName}`,
+  //       );
+  //     }
+
+  //     const phone =
+  //       record.Phone && String(record.Phone) !== '#ERROR!'
+  //         ? String(record.Phone)
+  //         : undefined;
+
+  //     const employeeDto: CreateEmployeeDto = {
+  //       id: record.id ?? 0,
+  //       user_id: record.UserId,
+  //       employee_code: record.EmployeeCode || undefined,
+  //       name: record.FullName,
+  //       personal_email: record.PersonalEmail || undefined,
+  //       work_email: record.WorkEmail || undefined,
+  //       personal_phone: phone,
+  //       joining_date: joiningDate ? joiningDate.toISOString() : undefined,
+  //       releaving_date: releavingDate ? releavingDate.toISOString() : undefined,
+  //       address: record.Address || undefined,
+  //       facebook_url: record.FacebookURL || undefined,
+  //       remarks: record.Remarks || undefined,
+  //       reporting_email: record.ReportingEmails || undefined,
+  //       designation: record.designation || undefined,
+  //       confirmation_date: confirmationDate
+  //         ? confirmationDate.toISOString()
+  //         : undefined,
+  //     };
+
+  //     employees.push(employeeDto);
+  //   }
+
+  //   const results: { row: number; employee: any }[] = [];
+  //   const errors: { row: number; error: string }[] = [];
+
+  //   for (const [index, dto] of employees.entries()) {
+  //     try {
+  //       const result = await this.employeesService.create(dto);
+  //       results.push({ row: index + 2, employee: result.employee });
+  //     } catch (error) {
+  //       errors.push({ row: index + 2, error: error.message });
+  //     }
+  //   }
+
+  //   return {
+  //     message: 'Import completed',
+  //     successful: results,
+  //     errors,
+  //     totalProcessed: employees.length,
+  //     totalErrors: errors.length,
+  //   };
+  // }
 
   @Post('create')
   @UsePipes(
@@ -225,7 +178,7 @@ export class EmployeesController {
       transform: true,
     }),
   )
-  async create(@Body() dto: CreateEmployeeDto) {
+  async import(@Body() dto: CreateEmployeeDto) {
     return this.employeesService.create(dto);
   }
 
