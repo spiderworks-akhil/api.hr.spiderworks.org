@@ -21,7 +21,6 @@ export class EmployeesService {
       });
       const newId = maxIdEmployee ? maxIdEmployee.id + 1 : 1;
 
-      // Check for duplicate emails
       if (dto.personal_email || dto.work_email) {
         const existingEmployee = await this.prisma.employee.findFirst({
           where: {
@@ -38,7 +37,6 @@ export class EmployeesService {
         }
       }
 
-      // Check for duplicate user_id
       if (dto.user_id) {
         const existingUser = await this.prisma.employee.findFirst({
           where: { user_id: dto.user_id },
@@ -50,10 +48,9 @@ export class EmployeesService {
         }
       }
 
-      // Check for duplicate employee_code
       if (dto.employee_code) {
         const existingCode = await this.prisma.employee.findFirst({
-          where: { employee_code: String(dto.employee_code) }, // Convert to string
+          where: { employee_code: String(dto.employee_code) },
         });
         if (existingCode) {
           throw new BadRequestException(
@@ -62,7 +59,6 @@ export class EmployeesService {
         }
       }
 
-      // Validate additional manager IDs
       if (dto.additional_manager_ids && dto.additional_manager_ids.length > 0) {
         const validManagers = await this.prisma.employee.findMany({
           where: { id: { in: dto.additional_manager_ids } },
@@ -74,7 +70,6 @@ export class EmployeesService {
         }
       }
 
-      // Validate department ID
       if (dto.departments_id) {
         const department = await this.prisma.department.findUnique({
           where: { id: dto.departments_id },
@@ -86,7 +81,6 @@ export class EmployeesService {
         }
       }
 
-      // Validate employee level ID
       if (dto.employee_level_id) {
         const level = await this.prisma.employeeLevel.findUnique({
           where: { id: dto.employee_level_id },
@@ -98,7 +92,6 @@ export class EmployeesService {
         }
       }
 
-      // Validate manager ID
       if (dto.manager_id) {
         const manager = await this.prisma.employee.findUnique({
           where: { id: dto.manager_id },
@@ -110,7 +103,6 @@ export class EmployeesService {
         }
       }
 
-      // Validate created_by ID
       if (dto.created_by) {
         const creator = await this.prisma.employee.findUnique({
           where: { id: dto.created_by },
@@ -122,7 +114,6 @@ export class EmployeesService {
         }
       }
 
-      // Validate updated_by ID
       if (dto.updated_by) {
         const updater = await this.prisma.employee.findUnique({
           where: { id: dto.updated_by },
@@ -134,10 +125,9 @@ export class EmployeesService {
         }
       }
 
-      // Prepare data for Prisma create
       const data: Prisma.EmployeeCreateInput = {
         id: newId,
-        employee_code: dto.employee_code ? String(dto.employee_code) : null, // Ensure string
+        employee_code: dto.employee_code ? String(dto.employee_code) : null,
         name: dto.name,
         personal_email: dto.personal_email ?? null,
         work_email: dto.work_email ?? null,
@@ -207,7 +197,6 @@ export class EmployeesService {
         },
       };
 
-      // Create employee record
       const employee = await this.prisma.employee.create({
         data,
         include: {
@@ -300,7 +289,6 @@ export class EmployeesService {
 
   async update(id: number, dto: UpdateEmployeeDto) {
     try {
-      // Verify employee exists
       const employee = await this.prisma.employee.findUnique({
         where: { id },
       });
@@ -308,7 +296,6 @@ export class EmployeesService {
         throw new NotFoundException(`Employee with ID ${id} not found`);
       }
 
-      // Check for duplicate emails
       if (dto.personal_email !== undefined || dto.work_email !== undefined) {
         const existingEmployee = await this.prisma.employee.findFirst({
           where: {
@@ -330,7 +317,6 @@ export class EmployeesService {
         }
       }
 
-      // Check for duplicate user_id
       if (dto.user_id !== undefined && dto.user_id !== null) {
         const existingUser = await this.prisma.employee.findFirst({
           where: { user_id: dto.user_id, NOT: { id } },
@@ -342,10 +328,9 @@ export class EmployeesService {
         }
       }
 
-      // Check for duplicate employee_code
       if (dto.employee_code !== undefined && dto.employee_code !== null) {
         const existingCode = await this.prisma.employee.findFirst({
-          where: { employee_code: String(dto.employee_code), NOT: { id } }, // Convert to string
+          where: { employee_code: String(dto.employee_code), NOT: { id } },
         });
         if (existingCode) {
           throw new BadRequestException(
@@ -354,7 +339,6 @@ export class EmployeesService {
         }
       }
 
-      // Validate additional manager IDs
       if (dto.additional_manager_ids && dto.additional_manager_ids.length > 0) {
         const validManagers = await this.prisma.employee.findMany({
           where: { id: { in: dto.additional_manager_ids } },
@@ -366,7 +350,6 @@ export class EmployeesService {
         }
       }
 
-      // Validate department ID
       if (dto.departments_id !== undefined && dto.departments_id !== null) {
         const department = await this.prisma.department.findUnique({
           where: { id: dto.departments_id },
@@ -378,7 +361,6 @@ export class EmployeesService {
         }
       }
 
-      // Validate employee level ID
       if (
         dto.employee_level_id !== undefined &&
         dto.employee_level_id !== null
@@ -393,7 +375,6 @@ export class EmployeesService {
         }
       }
 
-      // Validate manager ID
       if (dto.manager_id !== undefined && dto.manager_id !== null) {
         const manager = await this.prisma.employee.findUnique({
           where: { id: dto.manager_id },
@@ -405,7 +386,6 @@ export class EmployeesService {
         }
       }
 
-      // Validate created_by ID
       if (dto.created_by !== undefined && dto.created_by !== null) {
         const creator = await this.prisma.employee.findUnique({
           where: { id: dto.created_by },
@@ -417,7 +397,6 @@ export class EmployeesService {
         }
       }
 
-      // Validate updated_by ID
       if (dto.updated_by !== undefined && dto.updated_by !== null) {
         const updater = await this.prisma.employee.findUnique({
           where: { id: dto.updated_by },
@@ -429,11 +408,10 @@ export class EmployeesService {
         }
       }
 
-      // Prepare data for update
       const data: Prisma.EmployeeUpdateInput = {
         employee_code: dto.employee_code
           ? String(dto.employee_code)
-          : undefined, // Ensure string
+          : undefined,
         name: dto.name,
         personal_email: dto.personal_email,
         work_email: dto.work_email,
@@ -520,7 +498,6 @@ export class EmployeesService {
           : undefined,
       };
 
-      // Update employee record
       const updated = await this.prisma.employee.update({
         where: { id },
         data,
@@ -587,13 +564,11 @@ export class EmployeesService {
       }
 
       await this.prisma.$transaction(async (prisma) => {
-        // Remove manager references
         await prisma.employee.updateMany({
           where: { manager_id: id },
           data: { manager_id: null },
         });
 
-        // Remove additional manager references
         const employeesWithManager = await prisma.employee.findMany({
           where: {
             additionalManagers: {
@@ -614,49 +589,42 @@ export class EmployeesService {
           });
         }
 
-        // Delete related employee documents
         await prisma.employeeDocument.deleteMany({
           where: {
             OR: [{ employee_id: id }, { created_by: id }, { updated_by: id }],
           },
         });
 
-        // Delete related employee photos
         await prisma.employeePhoto.deleteMany({
           where: {
             OR: [{ employee_id: id }, { created_by: id }, { updated_by: id }],
           },
         });
 
-        // Delete related employee notes
         await prisma.employeeNote.deleteMany({
           where: {
             OR: [{ employee_id: id }, { created_by: id }, { updated_by: id }],
           },
         });
 
-        // Delete related emergency contacts
         await prisma.employeeEmergencyContact.deleteMany({
           where: {
             OR: [{ employee_id: id }, { created_by: id }, { updated_by: id }],
           },
         });
 
-        // Delete related skill hobbies
         await prisma.employeeSkillHobby.deleteMany({
           where: {
             OR: [{ employee_id: id }, { created_by: id }, { updated_by: id }],
           },
         });
 
-        // Delete related rating parameters
         await prisma.employeeRatingParameter.deleteMany({
           where: {
             OR: [{ created_by: id }, { updated_by: id }],
           },
         });
 
-        // Update departments to remove references
         await prisma.department.updateMany({
           where: {
             OR: [
@@ -672,7 +640,6 @@ export class EmployeesService {
           },
         });
 
-        // Delete employee record
         await prisma.employee.delete({
           where: { id },
         });
