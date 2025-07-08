@@ -15,6 +15,12 @@ export class EmployeesService {
 
   async create(dto: CreateEmployeeDto) {
     try {
+      const maxIdEmployee = await this.prisma.employee.findFirst({
+        orderBy: { id: 'desc' },
+        select: { id: true },
+      });
+      const newId = maxIdEmployee ? maxIdEmployee.id + 1 : 1;
+
       // Check for duplicate emails
       if (dto.personal_email || dto.work_email) {
         const existingEmployee = await this.prisma.employee.findFirst({
@@ -130,6 +136,7 @@ export class EmployeesService {
 
       // Prepare data for Prisma create
       const data: Prisma.EmployeeCreateInput = {
+        id: newId,
         employee_code: dto.employee_code ? String(dto.employee_code) : null, // Ensure string
         name: dto.name,
         personal_email: dto.personal_email ?? null,
