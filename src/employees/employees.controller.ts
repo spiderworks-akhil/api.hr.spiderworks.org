@@ -19,12 +19,13 @@ import { EmployeesService } from './employees.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { UpdateEmployeePermissionsDto } from './dto/update-employee-permissions.dto';
+import { validate } from 'class-validator';
 import * as XLSX from 'xlsx';
 
 interface ExcelRow {
   id?: string | number;
   UserId?: string | number;
-  EmployeeCode?: string;
+  EmployeeCode?: string | number;
   FullName: string;
   PersonalEmail?: string;
   WorkEmail?: string;
@@ -56,14 +57,14 @@ export class EmployeesController {
     if (!file) {
       throw new BadRequestException('No file uploaded');
     }
-
+  
     if (
       !file.mimetype.includes('excel') &&
       !file.mimetype.includes('spreadsheetml')
     ) {
       throw new BadRequestException('Only Excel (XLSX) files are supported');
     }
-
+  
     const workbook = XLSX.read(file.buffer, {
       type: 'buffer',
       cellDates: true,
@@ -71,36 +72,47 @@ export class EmployeesController {
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
     const records: ExcelRow[] = XLSX.utils.sheet_to_json(sheet);
-
+  
     const employees: CreateEmployeeDto[] = [];
     const errors: { row: number; error: string }[] = [];
-
+  
     for (const [index, record] of records.entries()) {
       try {
-        // Log raw data for debugging
-        console.log(`Row ${index + 2}:`, {
-          id: record.id,
-          FullName: record.FullName,
-          parsedId: Number(record.id),
-          isValidNumber: !isNaN(Number(record.id)),
-          isInteger: Number.isInteger(Number(record.id)),
-        });
-
         // Validate ID
         const id =
           record.id !== undefined &&
           record.id !== null &&
           record.id !== '' &&
           !isNaN(Number(record.id)) &&
-          Number.isInteger(Number(record.id))
+          Number.isInteger(Number(record.id)) &&
+          Number(record.id) > 0
             ? Number(record.id)
             : undefined;
-        if (id === undefined || id <= 0) {
+        if (id === undefined) {
           throw new BadRequestException(
             `Missing or invalid ID in row ${index + 2}: ${record.FullName}. ID must be a positive integer. Found: "${record.id}"`,
           );
         }
-
+  
+        // Convert EmployeeCode to string explicitly
+        const employee_code =
+          record.EmployeeCode !== undefined &&
+          record.EmployeeCode !== null &&
+          record.EmployeeCode !== ''
+            ? String(record.EmployeeCode)
+            : undefined;
+  
+        // Validate UserId
+        const user_id =
+          record.UserId !== undefined &&
+          record.UserId !== null &&
+          !isNaN(Number(record.UserId)) &&
+          Number.isInteger(Number(record.UserId)) &&
+          Number(record.UserId) > 0
+            ? Number(record.UserId)
+            : undefined;
+  
+        // Parse dates
         const parseDate = (
           value: string | number | Date | undefined,
         ): Date | null => {
@@ -125,11 +137,11 @@ export class EmployeesController {
           }
           return null;
         };
-
+  
         const joiningDate = parseDate(record.JoiningDate);
         const confirmationDate = parseDate(record.confirmationDate);
         const releavingDate = parseDate(record.ReleavingDate);
-
+  
         if (record.JoiningDate && !joiningDate) {
           throw new BadRequestException(
             `Invalid JoiningDate in row ${index + 2}: ${record.FullName}`,
@@ -145,27 +157,22 @@ export class EmployeesController {
             `Invalid ReleavingDate in row ${index + 2}: ${record.FullName}`,
           );
         }
-
+  
         const phone =
           record.Phone && String(record.Phone) !== '#ERROR!'
             ? String(record.Phone)
             : undefined;
-
+  
         const employeeDto: CreateEmployeeDto = {
           id,
-          user_id:
-            record.UserId && !isNaN(Number(record.UserId))
-              ? Number(record.UserId)
-              : undefined,
-          employee_code: record.EmployeeCode || undefined,
+          user_id,
+          employee_code,
           name: record.FullName,
           personal_email: record.PersonalEmail || undefined,
           work_email: record.WorkEmail || undefined,
           personal_phone: phone,
           joining_date: joiningDate ? joiningDate.toISOString() : undefined,
-          releaving_date: releavingDate
-            ? releavingDate.toISOString()
-            : undefined,
+          releaving_date: releavingDate ? releavingDate.toISOString() : undefined,
           address: record.Address || undefined,
           facebook_url: record.FacebookURL || undefined,
           remarks: record.Remarks || undefined,
@@ -175,15 +182,23 @@ export class EmployeesController {
             ? confirmationDate.toISOString()
             : undefined,
         };
-
+  
+        // Validate DTO
+        const validationErrors = await validate(employeeDto);
+        if (validationErrors.length > 0) {
+          throw new BadRequestException(
+            `Validation failed for row ${index + 2}: ${JSON.stringify(validationErrors)}`,
+          );
+        }
+  
         employees.push(employeeDto);
       } catch (error) {
         errors.push({ row: index + 2, error: error.message });
       }
     }
-
+  
     const results: { row: number; employee: any }[] = [];
-
+  
     for (const [index, dto] of employees.entries()) {
       try {
         const result = await this.employeesService.create(dto);
@@ -192,7 +207,7 @@ export class EmployeesController {
         errors.push({ row: index + 2, error: error.message });
       }
     }
-
+  
     return {
       message: 'Import completed',
       successful: results,
