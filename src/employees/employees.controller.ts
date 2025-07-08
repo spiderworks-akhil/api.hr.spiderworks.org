@@ -21,23 +21,23 @@ import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { UpdateEmployeePermissionsDto } from './dto/update-employee-permissions.dto';
 import * as XLSX from 'xlsx';
 
-interface ExcelRow {
-  id?: number;
-  UserId?: number;
-  EmployeeCode?: string;
-  FullName: string;
-  PersonalEmail?: string;
-  WorkEmail?: string;
-  Phone?: string;
-  JoiningDate?: string | number;
-  ReleavingDate?: string | number;
-  Address?: string;
-  FacebookURL?: string;
-  Remarks?: string;
-  ReportingEmails?: string;
-  designation?: string;
-  confirmationDate?: string | number;
-}
+// interface ExcelRow {
+//   id?: number;
+//   UserId?: number;
+//   EmployeeCode?: string;
+//   FullName: string;
+//   PersonalEmail?: string;
+//   WorkEmail?: string;
+//   Phone?: string;
+//   JoiningDate?: string | number;
+//   ReleavingDate?: string | number;
+//   Address?: string;
+//   FacebookURL?: string;
+//   Remarks?: string;
+//   ReportingEmails?: string;
+//   designation?: string;
+//   confirmationDate?: string | number;
+// }
 
 @Controller('employees')
 export class EmployeesController {
