@@ -15,22 +15,30 @@ export class EmployeesService {
 
   async create(dto: CreateEmployeeDto) {
     try {
-      if (dto.personal_email || dto.work_email) {
+      // Validate ID
+      if (!dto.id || dto.id <= 0) {
+        throw new BadRequestException('ID must be a positive integer');
+      }
+
+      // Check for duplicate email or employee code
+      if (dto.personal_email || dto.work_email || dto.employee_code) {
         const existingEmployee = await this.prisma.employee.findFirst({
           where: {
             OR: [
               dto.personal_email ? { personal_email: dto.personal_email } : {},
               dto.work_email ? { work_email: dto.work_email } : {},
+              dto.employee_code ? { employee_code: dto.employee_code } : {},
             ],
           },
         });
         if (existingEmployee) {
           throw new BadRequestException(
-            'Employee with this email already exists',
+            'Employee with this email or employee code already exists',
           );
         }
       }
 
+      // Validate additional manager IDs
       if (dto.additional_manager_ids && dto.additional_manager_ids.length > 0) {
         const validManagers = await this.prisma.employee.findMany({
           where: { id: { in: dto.additional_manager_ids } },
@@ -42,6 +50,7 @@ export class EmployeesService {
         }
       }
 
+      // Validate department
       if (dto.departments_id) {
         const department = await this.prisma.department.findUnique({
           where: { id: dto.departments_id },
@@ -53,6 +62,7 @@ export class EmployeesService {
         }
       }
 
+      // Validate employee level
       if (dto.employee_level_id) {
         const level = await this.prisma.employeeLevel.findUnique({
           where: { id: dto.employee_level_id },
@@ -64,7 +74,39 @@ export class EmployeesService {
         }
       }
 
+      // Check for duplicate ID
+      const existingEmployee = await this.prisma.employee.findUnique({
+        where: { id: dto.id },
+      });
+      if (existingEmployee) {
+        throw new BadRequestException(
+          `Employee with ID ${dto.id} already exists`,
+        );
+      }
+
+      // Validate user ID
+      if (dto.user_id) {
+        const existingUser = await this.prisma.user.findUnique({
+          where: { id: dto.user_id },
+        });
+        if (!existingUser) {
+          throw new BadRequestException(
+            `User with ID ${dto.user_id} not found`,
+          );
+        }
+        const employeeWithUserId = await this.prisma.employee.findFirst({
+          where: { user_id: dto.user_id },
+        });
+        if (employeeWithUserId) {
+          throw new BadRequestException(
+            `User ID ${dto.user_id} is already assigned to another employee`,
+          );
+        }
+      }
+
       const data: Prisma.EmployeeCreateInput = {
+        id: dto.id,
+        employee_code: dto.employee_code ?? null,
         name: dto.name,
         personal_email: dto.personal_email ?? null,
         work_email: dto.work_email ?? null,
@@ -134,17 +176,19 @@ export class EmployeesService {
         },
       };
 
-      const employee = await this.prisma.employee.create({
-        data,
-        include: {
-          Department: true,
-          Role: true,
-          employeeLevel: true,
-          manager: true,
-          additionalManagers: { select: { id: true, name: true } },
-          createdBy: true,
-          updatedBy: true,
-        },
+      const employee = await this.prisma.$transaction(async (prisma) => {
+        return prisma.employee.create({
+          data,
+          include: {
+            Department: true,
+            Role: true,
+            employeeLevel: true,
+            manager: true,
+            additionalManagers: { select: { id: true, name: true } },
+            createdBy: true,
+            updatedBy: true,
+          },
+        });
       });
 
       return {
@@ -180,6 +224,7 @@ export class EmployeesService {
                     personal_email: { contains: keyword, mode: 'insensitive' },
                   },
                   { work_email: { contains: keyword, mode: 'insensitive' } },
+                  { employee_code: { contains: keyword, mode: 'insensitive' } },
                 ],
               }
             : {},
@@ -233,7 +278,11 @@ export class EmployeesService {
         throw new NotFoundException(`Employee with ID ${id} not found`);
       }
 
-      if (dto.personal_email !== undefined || dto.work_email !== undefined) {
+      if (
+        dto.personal_email !== undefined ||
+        dto.work_email !== undefined ||
+        dto.employee_code !== undefined
+      ) {
         const existingEmployee = await this.prisma.employee.findFirst({
           where: {
             OR: [
@@ -243,13 +292,16 @@ export class EmployeesService {
               dto.work_email !== undefined && dto.work_email !== null
                 ? { work_email: dto.work_email }
                 : {},
+              dto.employee_code !== undefined && dto.employee_code !== null
+                ? { employee_code: dto.employee_code }
+                : {},
             ],
             NOT: { id },
           },
         });
         if (existingEmployee) {
           throw new BadRequestException(
-            'Another employee with this email already exists',
+            'Another employee with this email or employee code already exists',
           );
         }
       }
@@ -290,7 +342,27 @@ export class EmployeesService {
         }
       }
 
+      if (dto.user_id !== undefined && dto.user_id !== null) {
+        const existingUser = await this.prisma.user.findUnique({
+          where: { id: dto.user_id },
+        });
+        if (!existingUser) {
+          throw new BadRequestException(
+            `User with ID ${dto.user_id} not found`,
+          );
+        }
+        const employeeWithUserId = await this.prisma.employee.findFirst({
+          where: { user_id: dto.user_id, NOT: { id } },
+        });
+        if (employeeWithUserId) {
+          throw new BadRequestException(
+            `User ID ${dto.user_id} is already assigned to another employee`,
+          );
+        }
+      }
+
       const data: Prisma.EmployeeUpdateInput = {
+        employee_code: dto.employee_code,
         name: dto.name,
         personal_email: dto.personal_email,
         work_email: dto.work_email,
@@ -377,18 +449,20 @@ export class EmployeesService {
           : undefined,
       };
 
-      const updated = await this.prisma.employee.update({
-        where: { id },
-        data,
-        include: {
-          Department: true,
-          Role: true,
-          employeeLevel: true,
-          manager: true,
-          additionalManagers: { select: { id: true, name: true } },
-          createdBy: true,
-          updatedBy: true,
-        },
+      const updated = await this.prisma.$transaction(async (prisma) => {
+        return prisma.employee.update({
+          where: { id },
+          data,
+          include: {
+            Department: true,
+            Role: true,
+            employeeLevel: true,
+            manager: true,
+            additionalManagers: { select: { id: true, name: true } },
+            createdBy: true,
+            updatedBy: true,
+          },
+        });
       });
 
       return {
@@ -553,18 +627,20 @@ export class EmployeesService {
         has_showcase_portal_access: dto.has_showcase_portal_access,
       };
 
-      const updated = await this.prisma.employee.update({
-        where: { id },
-        data,
-        include: {
-          Department: true,
-          Role: true,
-          employeeLevel: true,
-          manager: true,
-          additionalManagers: { select: { id: true, name: true } },
-          createdBy: true,
-          updatedBy: true,
-        },
+      const updated = await this.prisma.$transaction(async (prisma) => {
+        return prisma.employee.update({
+          where: { id },
+          data,
+          include: {
+            Department: true,
+            Role: true,
+            employeeLevel: true,
+            manager: true,
+            additionalManagers: { select: { id: true, name: true } },
+            createdBy: true,
+            updatedBy: true,
+          },
+        });
       });
 
       return {

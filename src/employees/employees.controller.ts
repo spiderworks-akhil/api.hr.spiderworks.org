@@ -22,6 +22,9 @@ import { UpdateEmployeePermissionsDto } from './dto/update-employee-permissions.
 import * as XLSX from 'xlsx';
 
 interface ExcelRow {
+  id?: string | number;
+  UserId?: string | number;
+  EmployeeCode?: string;
   FullName: string;
   PersonalEmail?: string;
   WorkEmail?: string;
@@ -34,8 +37,8 @@ interface ExcelRow {
   ReportingEmails?: string;
   designation?: string;
   confirmationDate?: string | number;
-  DepartmentId?: string | number;
 }
+
 @Controller('employees')
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
@@ -70,81 +73,116 @@ export class EmployeesController {
     const records: ExcelRow[] = XLSX.utils.sheet_to_json(sheet);
 
     const employees: CreateEmployeeDto[] = [];
+    const errors: { row: number; error: string }[] = [];
 
     for (const [index, record] of records.entries()) {
-      const parseDate = (
-        value: string | number | Date | undefined,
-      ): Date | null => {
-        if (!value) return null;
-        if (value instanceof Date) {
-          return isNaN(value.getTime()) ? null : value;
+      try {
+        // Log raw data for debugging
+        console.log(`Row ${index + 2}:`, {
+          id: record.id,
+          FullName: record.FullName,
+          parsedId: Number(record.id),
+          isValidNumber: !isNaN(Number(record.id)),
+          isInteger: Number.isInteger(Number(record.id)),
+        });
+
+        // Validate ID
+        const id =
+          record.id !== undefined &&
+          record.id !== null &&
+          record.id !== '' &&
+          !isNaN(Number(record.id)) &&
+          Number.isInteger(Number(record.id))
+            ? Number(record.id)
+            : undefined;
+        if (id === undefined || id <= 0) {
+          throw new BadRequestException(
+            `Missing or invalid ID in row ${index + 2}: ${record.FullName}. ID must be a positive integer. Found: "${record.id}"`,
+          );
         }
-        if (typeof value === 'number') {
-          return new Date(XLSX.SSF.format('yyyy-mm-dd', value));
+
+        const parseDate = (
+          value: string | number | Date | undefined,
+        ): Date | null => {
+          if (!value) return null;
+          if (value instanceof Date) {
+            return isNaN(value.getTime()) ? null : value;
+          }
+          if (typeof value === 'number') {
+            return new Date(XLSX.SSF.format('yyyy-mm-dd', value));
+          }
+          const match = String(value).match(/^(\d{2})\/(\d{2})\/(\d{2,4})$/);
+          if (match) {
+            const [_, month, day, year] = match;
+            const fullYear =
+              parseInt(year, 10) < 100
+                ? parseInt(year, 10) < 50
+                  ? `20${year}`
+                  : `19${year}`
+                : year;
+            const date = new Date(`${fullYear}-${month}-${day}`);
+            return isNaN(date.getTime()) ? null : date;
+          }
+          return null;
+        };
+
+        const joiningDate = parseDate(record.JoiningDate);
+        const confirmationDate = parseDate(record.confirmationDate);
+        const releavingDate = parseDate(record.ReleavingDate);
+
+        if (record.JoiningDate && !joiningDate) {
+          throw new BadRequestException(
+            `Invalid JoiningDate in row ${index + 2}: ${record.FullName}`,
+          );
+        }
+        if (record.confirmationDate && !confirmationDate) {
+          throw new BadRequestException(
+            `Invalid confirmationDate in row ${index + 2}: ${record.FullName}`,
+          );
+        }
+        if (record.ReleavingDate && !releavingDate) {
+          throw new BadRequestException(
+            `Invalid ReleavingDate in row ${index + 2}: ${record.FullName}`,
+          );
         }
 
-        const match = String(value).match(/^(\d{2})\/(\d{2})\/(\d{2,4})$/);
-        if (match) {
-          const [_, month, day, year] = match;
-          const fullYear =
-            parseInt(year, 10) < 100
-              ? parseInt(year, 10) < 50
-                ? `20${year}`
-                : `19${year}`
-              : year;
-          const date = new Date(`${fullYear}-${month}-${day}`);
-          return isNaN(date.getTime()) ? null : date;
-        }
-        return null;
-      };
+        const phone =
+          record.Phone && String(record.Phone) !== '#ERROR!'
+            ? String(record.Phone)
+            : undefined;
 
-      const joiningDate = parseDate(record.JoiningDate);
-      const confirmationDate = parseDate(record.confirmationDate);
-      const releavingDate = parseDate(record.ReleavingDate);
+        const employeeDto: CreateEmployeeDto = {
+          id,
+          user_id:
+            record.UserId && !isNaN(Number(record.UserId))
+              ? Number(record.UserId)
+              : undefined,
+          employee_code: record.EmployeeCode || undefined,
+          name: record.FullName,
+          personal_email: record.PersonalEmail || undefined,
+          work_email: record.WorkEmail || undefined,
+          personal_phone: phone,
+          joining_date: joiningDate ? joiningDate.toISOString() : undefined,
+          releaving_date: releavingDate
+            ? releavingDate.toISOString()
+            : undefined,
+          address: record.Address || undefined,
+          facebook_url: record.FacebookURL || undefined,
+          remarks: record.Remarks || undefined,
+          reporting_email: record.ReportingEmails || undefined,
+          designation: record.designation || undefined,
+          confirmation_date: confirmationDate
+            ? confirmationDate.toISOString()
+            : undefined,
+        };
 
-      if (record.JoiningDate && !joiningDate) {
-        throw new BadRequestException(
-          `Invalid JoiningDate in row ${index + 2}: ${record.FullName}`,
-        );
+        employees.push(employeeDto);
+      } catch (error) {
+        errors.push({ row: index + 2, error: error.message });
       }
-      if (record.confirmationDate && !confirmationDate) {
-        throw new BadRequestException(
-          `Invalid confirmationDate in row ${index + 2}: ${record.FullName}`,
-        );
-      }
-      if (record.ReleavingDate && !releavingDate) {
-        throw new BadRequestException(
-          `Invalid ReleavingDate in row ${index + 2}: ${record.FullName}`,
-        );
-      }
-
-      const phone =
-        record.Phone && String(record.Phone) !== '#ERROR!'
-          ? String(record.Phone)
-          : undefined;
-
-      const employeeDto: CreateEmployeeDto = {
-        name: record.FullName,
-        personal_email: record.PersonalEmail || undefined,
-        work_email: record.WorkEmail || undefined,
-        personal_phone: phone,
-        joining_date: joiningDate ? joiningDate.toISOString() : undefined,
-        releaving_date: releavingDate ? releavingDate.toISOString() : undefined,
-        address: record.Address || undefined,
-        facebook_url: record.FacebookURL || undefined,
-        remarks: record.Remarks || undefined,
-        reporting_email: record.ReportingEmails || undefined,
-        designation: record.designation || undefined,
-        confirmation_date: confirmationDate
-          ? confirmationDate.toISOString()
-          : undefined,
-      };
-
-      employees.push(employeeDto);
     }
 
     const results: { row: number; employee: any }[] = [];
-    const errors: { row: number; error: string }[] = [];
 
     for (const [index, dto] of employees.entries()) {
       try {
@@ -172,7 +210,7 @@ export class EmployeesController {
       transform: true,
     }),
   )
-  async import(@Body() dto: CreateEmployeeDto) {
+  async create(@Body() dto: CreateEmployeeDto) {
     return this.employeesService.create(dto);
   }
 

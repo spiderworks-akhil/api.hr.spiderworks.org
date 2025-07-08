@@ -11,9 +11,17 @@ import {
 } from 'class-validator';
 
 export class CreateEmployeeDto {
+  @IsInt()
+  @IsNotEmpty()
+  id: number;
+
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @IsOptional()
+  @IsString()
+  employee_code?: string;
 
   @IsOptional()
   @IsEmail()
