@@ -11,9 +11,9 @@ import {
 } from 'class-validator';
 
 export class CreateEmployeeDto {
-  @IsOptional()
-  @IsInt()
-  id?: number;
+  // @IsOptional()
+  // @IsInt()
+  // id?: number;
 
   @IsOptional()
   @IsInt()
