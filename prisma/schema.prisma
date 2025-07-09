@@ -27,6 +27,7 @@ model Employee {
   last_sign_in_email       String?
   last_sign_out_email      String?
   leave_notification_mails String?
+  current_employee         Int       @default(0)
 
   is_signin_mandatory         Int @default(1)
   has_work_portal_access      Int @default(0)

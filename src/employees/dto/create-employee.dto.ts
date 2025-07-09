@@ -13,6 +13,10 @@ import {
 export class CreateEmployeeDto {
   @IsOptional()
   @IsInt()
+  id?: number;
+
+  @IsOptional()
+  @IsInt()
   user_id?: number;
 
   @IsOptional()
@@ -144,6 +148,12 @@ export class CreateEmployeeDto {
   @Min(0)
   @Max(1)
   has_showcase_portal_access?: number = 0;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(1)
+  current_employee?: number = 0;
 
   @IsOptional()
   @IsString()
