@@ -126,7 +126,7 @@ export class EmployeesService {
       }
 
       const data: Prisma.EmployeeCreateInput = {
-        id: newId,
+        id: dto.id ?? newId,
         employee_code: dto.employee_code ? String(dto.employee_code) : null,
         name: dto.name,
         personal_email: dto.personal_email ?? null,
