@@ -137,6 +137,10 @@ export class EmployeeRatingParameterService {
     }
 
     try {
+      await this.prisma.employeeEvaluationTemplateParameterMapping.deleteMany({
+        where: { parameter_id: id },
+      });
+
       await this.prisma.employeeRatingParameter.delete({
         where: { id },
       });
