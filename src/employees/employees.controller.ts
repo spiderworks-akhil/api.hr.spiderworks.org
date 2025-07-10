@@ -128,16 +128,16 @@ export class EmployeesController {
   //         ? String(record.Phone)
   //         : undefined;
 
-  //     const currentEmployee =
+  //     const employeeType =
   //       record.CurrentEmployee !== undefined
   //         ? Number(record.CurrentEmployee)
   //         : undefined;
   //     if (
-  //       currentEmployee !== undefined &&
-  //       (isNaN(currentEmployee) || ![0, 1].includes(currentEmployee))
+  //       employeeType !== undefined &&
+  //       (isNaN(employeeType) || ![0, 1].includes(employeeType))
   //     ) {
   //       throw new BadRequestException(
-  //         `Invalid CurrentEmployee value in row ${index + 2}: ${record.FullName}. Must be 0 or 1.`,
+  //         `Invalid EmployeeType value in row ${index + 2}: ${record.FullName}. Must be 0 or 1.`,
   //       );
   //     }
 
@@ -163,7 +163,7 @@ export class EmployeesController {
   //         ? confirmationDate.toISOString()
   //         : undefined,
   //       departments_id: record.DepartmentId || undefined,
-  //       current_employee: currentEmployee,
+  //       employee_type: employeeType,
   //     };
 
   //     employees.push(employeeDto);

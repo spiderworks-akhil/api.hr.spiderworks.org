@@ -150,8 +150,6 @@ export class CreateEmployeeDto {
   @Max(1)
   has_showcase_portal_access?: number = 0;
 
-
-
   @IsOptional()
   @IsString()
   facebook_url?: string;

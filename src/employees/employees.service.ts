@@ -104,7 +104,7 @@ export class EmployeesService {
       }
 
       if (dto.created_by) {
-        const creator = await this.prisma.employee.findUnique({
+        const creator = await this.prisma.user.findUnique({
           where: { id: dto.created_by },
         });
         if (!creator) {
@@ -115,7 +115,7 @@ export class EmployeesService {
       }
 
       if (dto.updated_by) {
-        const updater = await this.prisma.employee.findUnique({
+        const updater = await this.prisma.user.findUnique({
           where: { id: dto.updated_by },
         });
         if (!updater) {
@@ -205,8 +205,22 @@ export class EmployeesService {
           employeeLevel: true,
           manager: true,
           additionalManagers: { select: { id: true, name: true } },
-          createdBy: true,
-          updatedBy: true,
+          createdBy: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
+          updatedBy: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
         },
       });
 
@@ -267,8 +281,22 @@ export class EmployeesService {
             employeeLevel: true,
             manager: true,
             additionalManagers: { select: { id: true, name: true } },
-            createdBy: true,
-            updatedBy: true,
+            createdBy: {
+              select: {
+                id: true,
+                first_name: true,
+                last_name: true,
+                email: true,
+              },
+            },
+            updatedBy: {
+              select: {
+                id: true,
+                first_name: true,
+                last_name: true,
+                email: true,
+              },
+            },
           },
         }),
         this.prisma.employee.count({ where }),
@@ -387,7 +415,7 @@ export class EmployeesService {
       }
 
       if (dto.created_by !== undefined && dto.created_by !== null) {
-        const creator = await this.prisma.employee.findUnique({
+        const creator = await this.prisma.user.findUnique({
           where: { id: dto.created_by },
         });
         if (!creator) {
@@ -398,7 +426,7 @@ export class EmployeesService {
       }
 
       if (dto.updated_by !== undefined && dto.updated_by !== null) {
-        const updater = await this.prisma.employee.findUnique({
+        const updater = await this.prisma.user.findUnique({
           where: { id: dto.updated_by },
         });
         if (!updater) {
@@ -507,8 +535,22 @@ export class EmployeesService {
           employeeLevel: true,
           manager: true,
           additionalManagers: { select: { id: true, name: true } },
-          createdBy: true,
-          updatedBy: true,
+          createdBy: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
+          updatedBy: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
         },
       });
 
@@ -533,8 +575,22 @@ export class EmployeesService {
           employeeLevel: true,
           manager: true,
           additionalManagers: { select: { id: true, name: true } },
-          createdBy: true,
-          updatedBy: true,
+          createdBy: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
+          updatedBy: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
         },
       });
 
@@ -683,8 +739,22 @@ export class EmployeesService {
           employeeLevel: true,
           manager: true,
           additionalManagers: { select: { id: true, name: true } },
-          createdBy: true,
-          updatedBy: true,
+          createdBy: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
+          updatedBy: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
         },
       });
 
