@@ -3,9 +3,14 @@ import {
   IsNotEmpty,
   IsInt,
   IsOptional,
-  IsBoolean,
+  IsEnum,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+
+export enum RatingParameterTypeDto {
+  STAR_RATING = 'STAR_RATING',
+  DESCRIPTIVE = 'DESCRIPTIVE',
+}
 
 export class CreateEmployeeRatingParameterDto {
   @IsString()
@@ -30,6 +35,10 @@ export class CreateEmployeeRatingParameterDto {
   @IsOptional()
   @Type(() => Number)
   ratable_by_self?: number;
+
+  @IsEnum(RatingParameterTypeDto)
+  @IsOptional()
+  type?: RatingParameterTypeDto;
 
   @IsInt()
   @IsOptional()

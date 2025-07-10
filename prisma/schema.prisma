@@ -352,6 +352,8 @@ model EmployeeRatingParameter {
   ratable_by_manager Int     @default(0)
   ratable_by_self    Int     @default(0)
 
+  type RatingParameterType @default(STAR_RATING)
+
   created_by Int?
   updated_by Int?
   created_at DateTime @default(now())
@@ -361,6 +363,11 @@ model EmployeeRatingParameter {
   updatedBy Employee? @relation("UpdatedRatingParameterBy", fields: [updated_by], references: [id])
 
   parameterAssignments EmployeeEvaluationTemplateParameterMapping[]
+}
+
+enum RatingParameterType {
+  STAR_RATING
+  DESCRIPTIVE
 }
 
 model PeerFeedback {

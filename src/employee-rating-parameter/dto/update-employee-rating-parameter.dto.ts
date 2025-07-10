@@ -1,5 +1,6 @@
-import { IsString, IsOptional, IsInt } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
+import { RatingParameterTypeDto } from './create-employee-rating-parameter.dto';
 
 export class UpdateEmployeeRatingParameterDto {
   @IsString()
@@ -9,6 +10,10 @@ export class UpdateEmployeeRatingParameterDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @IsEnum(RatingParameterTypeDto)
+  @IsOptional()
+  type?: RatingParameterTypeDto;
 
   @IsInt()
   @IsOptional()

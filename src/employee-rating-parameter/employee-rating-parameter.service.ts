@@ -6,7 +6,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateEmployeeRatingParameterDto } from './dto/create-employee-rating-parameter.dto';
 import { UpdateEmployeeRatingParameterDto } from './dto/update-employee-rating-parameter.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma, RatingParameterType } from '@prisma/client';
 
 @Injectable()
 export class EmployeeRatingParameterService {
@@ -20,6 +20,8 @@ export class EmployeeRatingParameterService {
         ratable_by_client: dto.ratable_by_client ?? 0,
         ratable_by_manager: dto.ratable_by_manager ?? 0,
         ratable_by_self: dto.ratable_by_self ?? 0,
+        type:
+          (dto.type as RatingParameterType) ?? RatingParameterType.STAR_RATING,
         createdBy: dto.created_by
           ? { connect: { id: dto.created_by } }
           : undefined,
@@ -90,6 +92,7 @@ export class EmployeeRatingParameterService {
         ratable_by_client: dto.ratable_by_client,
         ratable_by_manager: dto.ratable_by_manager,
         ratable_by_self: dto.ratable_by_self,
+        type: dto.type as RatingParameterType,
         createdBy: dto.created_by
           ? { connect: { id: dto.created_by } }
           : dto.created_by === null
