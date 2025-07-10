@@ -31,11 +31,18 @@ export class EmployeeEvaluationResponseService {
       const existingMappings =
         await this.prisma.employeeEvaluationTemplateParameterMapping.findMany({
           where: { id: { in: parameterAssignmentIds } },
+          include: { parameter: true },
         });
       if (existingMappings.length !== parameterAssignmentIds.length) {
         throw new BadRequestException(
           'One or more parameter assignment IDs are invalid',
         );
+      }
+
+      // Map parameter_mapping_id to type
+      const mappingTypeMap = new Map<number, string>();
+      for (const mapping of existingMappings) {
+        mappingTypeMap.set(mapping.id, mapping.parameter.type);
       }
 
       const result = await this.prisma.$transaction(async (prisma) => {
@@ -68,6 +75,9 @@ export class EmployeeEvaluationResponseService {
         const responsesToUpdate: { id: number; data: any }[] = [];
 
         dto.parameter_responses.forEach((param) => {
+          const type = mappingTypeMap.get(param.parameter_mapping_id);
+          const isStar = type === 'STAR_RATING';
+          const isDesc = type === 'DESCRIPTIVE';
           const existingResponse = existingResponseMap.get(
             param.parameter_mapping_id,
           );
@@ -75,7 +85,8 @@ export class EmployeeEvaluationResponseService {
             responsesToUpdate.push({
               id: existingResponse.id,
               data: {
-                response_value: param.response_value,
+                response_value: isStar ? param.response_value : null,
+                description: isDesc ? param.description : null,
                 updated_by: dto.updated_by,
                 updated_at: new Date(),
               },
@@ -84,7 +95,8 @@ export class EmployeeEvaluationResponseService {
             responsesToCreate.push({
               employee_evaluation_id: dto.employee_evaluation_id,
               parameter_mapping_id: param.parameter_mapping_id,
-              response_value: param.response_value,
+              response_value: isStar ? param.response_value : null,
+              description: isDesc ? param.description : null,
               created_by: dto.created_by,
               updated_by: dto.updated_by,
             });

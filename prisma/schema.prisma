@@ -530,6 +530,7 @@ model EmployeeEvaluationResponse {
   employee_evaluation_id Int?
   parameter_mapping_id   Int?
   response_value         Int?
+  description            String?
   created_by             Int?
   updated_by             Int?
   created_at             DateTime? @default(now())

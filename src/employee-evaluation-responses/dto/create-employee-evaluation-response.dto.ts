@@ -15,6 +15,10 @@ class ParameterResponse {
   @IsInt()
   @Type(() => Number)
   response_value: number;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
 }
 
 export class CreateEmployeeEvaluationResponseDto {
