@@ -13,8 +13,9 @@ class ParameterResponse {
   parameter_mapping_id: number;
 
   @IsInt()
+  @IsOptional()
   @Type(() => Number)
-  response_value: number;
+  response_value?: number;
 
   @IsString()
   @IsOptional()
