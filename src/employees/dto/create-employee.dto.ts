@@ -68,8 +68,9 @@ export class CreateEmployeeDto {
   employee_level_id?: number;
 
   @IsOptional()
-  @IsString()
-  employee_type?: string;
+  @IsInt()
+  @Min(0)
+  employee_type?: number = 0;
 
   @IsOptional()
   @IsString()
@@ -149,11 +150,7 @@ export class CreateEmployeeDto {
   @Max(1)
   has_showcase_portal_access?: number = 0;
 
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Max(1)
-  current_employee?: number = 0;
+
 
   @IsOptional()
   @IsString()

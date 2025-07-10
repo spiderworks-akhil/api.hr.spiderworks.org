@@ -20,14 +20,13 @@ model Employee {
   marriage_date            DateTime?
   joining_date             DateTime?
   releaving_date           DateTime?
-  employee_type            String?
   address                  String?
   remarks                  String?
   reporting_email          String?
   last_sign_in_email       String?
   last_sign_out_email      String?
   leave_notification_mails String?
-  current_employee         Int       @default(0)
+  employee_type            Int       @default(0)
 
   is_signin_mandatory         Int @default(1)
   has_work_portal_access      Int @default(0)
@@ -72,11 +71,8 @@ model Employee {
   additionalManagers Employee[] @relation("AdditionalManagers")
   managedBy          Employee[] @relation("AdditionalManagers")
 
-  createdBy        Employee?  @relation("CreatedBy", fields: [created_by], references: [id])
-  createdEmployees Employee[] @relation("CreatedBy")
-
-  updatedBy        Employee?  @relation("UpdatedBy", fields: [updated_by], references: [id])
-  updatedEmployees Employee[] @relation("UpdatedBy")
+  createdBy User? @relation("EmployeeCreatedBy", fields: [created_by], references: [id])
+  updatedBy User? @relation("EmployeeUpdatedBy", fields: [updated_by], references: [id])
 
   employeeDocuments        EmployeeDocument[] @relation("EmployeeDocuments")
   createdEmployeeDocuments EmployeeDocument[] @relation("CreatedEmployeeDocumentBy")
@@ -761,6 +757,9 @@ model User {
   updated_at DateTime  @updatedAt
 
   employee Employee?
+
+  createdEmployees Employee[] @relation("EmployeeCreatedBy")
+  updatedEmployees Employee[] @relation("EmployeeUpdatedBy")
 
   requestedRecruitments RecruitmentRequest[] @relation("RequestedRecruitments")
   createdRecruitments   RecruitmentRequest[] @relation("CreatedRecruitments")

@@ -144,7 +144,7 @@ export class EmployeesService {
         releaving_date: dto.releaving_date
           ? new Date(dto.releaving_date)
           : null,
-        employee_type: dto.employee_type ?? null,
+        employee_type: dto.employee_type ?? 0,
         address: dto.address ?? null,
         remarks: dto.remarks ?? null,
         reporting_email: dto.reporting_email ?? null,
@@ -160,7 +160,6 @@ export class EmployeesService {
         has_accounts_portal_access: dto.has_accounts_portal_access ?? 0,
         has_admin_portal_access: dto.has_admin_portal_access ?? 0,
         has_showcase_portal_access: dto.has_showcase_portal_access ?? 0,
-        current_employee: dto.current_employee ?? 0,
         facebook_url: dto.facebook_url ?? null,
         instagram_url: dto.instagram_url ?? null,
         linkedin_url: dto.linkedin_url ?? null,
@@ -250,7 +249,7 @@ export class EmployeesService {
           employeeRole ? { Role: { name: employeeRole } } : {},
           employeeLevel ? { employeeLevel: { name: employeeLevel } } : {},
           employeeType
-            ? { employee_type: { equals: employeeType, mode: 'insensitive' } }
+            ? { employee_type: { equals: parseInt(employeeType) } }
             : {},
           department ? { Department: { name: department } } : {},
         ],
@@ -431,7 +430,7 @@ export class EmployeesService {
         releaving_date: dto.releaving_date
           ? new Date(dto.releaving_date)
           : undefined,
-        employee_type: dto.employee_type,
+        employee_type: dto.employee_type ?? 0,
         address: dto.address,
         remarks: dto.remarks,
         reporting_email: dto.reporting_email,
@@ -447,7 +446,6 @@ export class EmployeesService {
         has_accounts_portal_access: dto.has_accounts_portal_access,
         has_admin_portal_access: dto.has_admin_portal_access,
         has_showcase_portal_access: dto.has_showcase_portal_access,
-        current_employee: dto.current_employee,
         facebook_url: dto.facebook_url,
         instagram_url: dto.instagram_url,
         linkedin_url: dto.linkedin_url,
