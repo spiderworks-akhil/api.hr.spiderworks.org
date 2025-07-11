@@ -211,6 +211,14 @@ export class EmployeesController {
     @Query('employee_level') employeeLevel?: string,
     @Query('employee_type') employeeType?: string,
     @Query('department') department?: string,
+    @Query('has_work_portal_access') hasWorkPortalAccess?: string,
+    @Query('has_hr_portal_access') hasHrPortalAccess?: string,
+    @Query('has_client_portal_access') hasClientPortalAccess?: string,
+    @Query('has_inventory_portal_access') hasInventoryPortalAccess?: string,
+    @Query('has_super_admin_access') hasSuperAdminAccess?: string,
+    @Query('has_accounts_portal_access') hasAccountsPortalAccess?: string,
+    @Query('has_admin_portal_access') hasAdminPortalAccess?: string,
+    @Query('has_showcase_portal_access') hasShowcasePortalAccess?: string,
   ) {
     const parsedPage = parseInt(page, 10);
     if (isNaN(parsedPage) || parsedPage < 1) {
@@ -234,6 +242,14 @@ export class EmployeesController {
       employeeLevel,
       employeeType,
       department,
+      hasWorkPortalAccess,
+      hasHrPortalAccess,
+      hasClientPortalAccess,
+      hasInventoryPortalAccess,
+      hasSuperAdminAccess,
+      hasAccountsPortalAccess,
+      hasAdminPortalAccess,
+      hasShowcasePortalAccess,
     );
   }
 

@@ -243,6 +243,14 @@ export class EmployeesService {
     employeeLevel?: string,
     employeeType?: string,
     department?: string,
+    hasWorkPortalAccess?: string,
+    hasHrPortalAccess?: string,
+    hasClientPortalAccess?: string,
+    hasInventoryPortalAccess?: string,
+    hasSuperAdminAccess?: string,
+    hasAccountsPortalAccess?: string,
+    hasAdminPortalAccess?: string,
+    hasShowcasePortalAccess?: string,
   ) {
     try {
       const skip = (page - 1) * limit;
@@ -266,6 +274,58 @@ export class EmployeesService {
             ? { employee_type: { equals: parseInt(employeeType) } }
             : {},
           department ? { Department: { name: department } } : {},
+          hasWorkPortalAccess !== undefined
+            ? {
+                has_work_portal_access: {
+                  equals: parseInt(hasWorkPortalAccess),
+                },
+              }
+            : {},
+          hasHrPortalAccess !== undefined
+            ? { has_hr_portal_access: { equals: parseInt(hasHrPortalAccess) } }
+            : {},
+          hasClientPortalAccess !== undefined
+            ? {
+                has_client_portal_access: {
+                  equals: parseInt(hasClientPortalAccess),
+                },
+              }
+            : {},
+          hasInventoryPortalAccess !== undefined
+            ? {
+                has_inventory_portal_access: {
+                  equals: parseInt(hasInventoryPortalAccess),
+                },
+              }
+            : {},
+          hasSuperAdminAccess !== undefined
+            ? {
+                has_super_admin_access: {
+                  equals: parseInt(hasSuperAdminAccess),
+                },
+              }
+            : {},
+          hasAccountsPortalAccess !== undefined
+            ? {
+                has_accounts_portal_access: {
+                  equals: parseInt(hasAccountsPortalAccess),
+                },
+              }
+            : {},
+          hasAdminPortalAccess !== undefined
+            ? {
+                has_admin_portal_access: {
+                  equals: parseInt(hasAdminPortalAccess),
+                },
+              }
+            : {},
+          hasShowcasePortalAccess !== undefined
+            ? {
+                has_showcase_portal_access: {
+                  equals: parseInt(hasShowcasePortalAccess),
+                },
+              }
+            : {},
         ],
       };
 
