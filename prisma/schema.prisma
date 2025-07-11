@@ -751,6 +751,7 @@ enum UserRole {
   STANDARD_USER
   HR_ASSISTANT
   HR_HEAD
+  NO_ACCESS
 }
 
 model User {
