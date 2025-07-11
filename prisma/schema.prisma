@@ -507,7 +507,6 @@ model EmployeeEvaluation {
   evaluation_by_name         String?
   evaluation_by_email        String?
   evaluation_remarks         String?
-  improvements_suggested     String?
   is_open                    Int?      @default(0)
   created_by                 Int?
   updated_by                 Int?

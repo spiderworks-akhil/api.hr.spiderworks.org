@@ -37,10 +37,6 @@ export class CreateEmployeeEvaluationResponseDto {
   @IsOptional()
   evaluation_remarks?: string;
 
-  @IsString()
-  @IsOptional()
-  improvements_suggested?: string;
-
   @IsInt()
   @IsOptional()
   @Type(() => Number)

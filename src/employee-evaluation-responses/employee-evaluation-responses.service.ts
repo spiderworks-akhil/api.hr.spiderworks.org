@@ -39,19 +39,17 @@ export class EmployeeEvaluationResponseService {
         );
       }
 
-      // Map parameter_mapping_id to type
       const mappingTypeMap = new Map<number, string>();
       for (const mapping of existingMappings) {
         mappingTypeMap.set(mapping.id, mapping.parameter.type);
       }
 
       const result = await this.prisma.$transaction(async (prisma) => {
-        if (dto.evaluation_remarks || dto.improvements_suggested) {
+        if (dto.evaluation_remarks) {
           await prisma.employeeEvaluation.update({
             where: { id: dto.employee_evaluation_id },
             data: {
               evaluation_remarks: dto.evaluation_remarks,
-              improvements_suggested: dto.improvements_suggested,
               updated_by: dto.updated_by,
               updated_at: new Date(),
             },
