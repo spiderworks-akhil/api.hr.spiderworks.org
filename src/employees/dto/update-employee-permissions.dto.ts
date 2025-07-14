@@ -46,4 +46,9 @@ export class UpdateEmployeePermissionsDto {
   @IsInt()
   @Type(() => Number)
   has_showcase_portal_access?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  updated_by?: number;
 }

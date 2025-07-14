@@ -788,6 +788,9 @@ export class EmployeesService {
         has_accounts_portal_access: dto.has_accounts_portal_access,
         has_admin_portal_access: dto.has_admin_portal_access,
         has_showcase_portal_access: dto.has_showcase_portal_access,
+        updatedBy: dto.updated_by
+          ? { connect: { id: dto.updated_by } }
+          : undefined,
       };
 
       const updated = await this.prisma.employee.update({
