@@ -809,3 +809,4 @@ model RecruitmentRequest {
   createdBy   User? @relation("CreatedRecruitments", fields: [created_by], references: [id], onDelete: SetNull)
   updatedBy   User? @relation("UpdatedRecruitments", fields: [updated_by], references: [id], onDelete: SetNull)
 }
+
