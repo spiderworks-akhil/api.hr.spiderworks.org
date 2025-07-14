@@ -74,108 +74,27 @@ model Employee {
   createdBy User? @relation("EmployeeCreatedBy", fields: [created_by], references: [id])
   updatedBy User? @relation("EmployeeUpdatedBy", fields: [updated_by], references: [id])
 
-  employeeDocuments        EmployeeDocument[] @relation("EmployeeDocuments")
-  createdEmployeeDocuments EmployeeDocument[] @relation("CreatedEmployeeDocumentBy")
-  updatedEmployeeDocuments EmployeeDocument[] @relation("UpdatedEmployeeDocumentBy")
-
-  skillHobbies        EmployeeSkillHobby[] @relation("SkillHobbyEmployee")
-  createdSkillHobbies EmployeeSkillHobby[] @relation("CreatedSkillHobbyBy")
-  updatedSkillHobbies EmployeeSkillHobby[] @relation("UpdatedSkillHobbyBy")
-
-  emergencyContacts        EmployeeEmergencyContact[] @relation("EmergencyContacts")
-  createdEmergencyContacts EmployeeEmergencyContact[] @relation("CreatedEmergencyContactBy")
-  updatedEmergencyContacts EmployeeEmergencyContact[] @relation("UpdatedEmergencyContactBy")
-
-  employeePhotos        EmployeePhoto[] @relation("EmployeePhotos")
-  createdEmployeePhotos EmployeePhoto[] @relation("CreatedEmployeePhotoBy")
-  updatedEmployeePhotos EmployeePhoto[] @relation("UpdatedEmployeePhotoBy")
-
-  employeeNotes        EmployeeNote[] @relation("EmployeeNotes")
-  createdEmployeeNotes EmployeeNote[] @relation("CreatedEmployeeNoteBy")
-  updatedEmployeeNotes EmployeeNote[] @relation("UpdatedEmployeeNoteBy")
-
-  headDepartments    Department[] @relation("DepartmentHead")
-  createdDepartments Department[] @relation("DepartmentCreatedBy")
-  updatedDepartments Department[] @relation("DepartmentUpdatedBy")
-
-  createdRoles Role[] @relation("RoleCreatedBy")
-  updatedRoles Role[] @relation("RoleUpdatedBy")
-
-  createdEmployeeLevels EmployeeLevel[] @relation("EmployeeLevelCreatedBy")
-  updatedEmployeeLevels EmployeeLevel[] @relation("EmployeeLevelUpdatedBy")
-
-  createdDocumentCategories DocumentCategory[] @relation("DocumentCategoryCreatedBy")
-  updatedDocumentCategories DocumentCategory[] @relation("DocumentCategoryUpdatedBy")
-
-  createdDocuments Document[] @relation("DocumentCreatedBy")
-  updatedDocuments Document[] @relation("DocumentUpdatedBy")
-
-  accessibleDocuments Document[] @relation("EmployeeDocumentAccess")
-
-  created_rating_parameters EmployeeRatingParameter[] @relation("CreatedRatingParameterBy")
-  updated_rating_parameters EmployeeRatingParameter[] @relation("UpdatedRatingParameterBy")
-
-  providedFeedbacks    PeerFeedback[] @relation("ProvidedFeedback")
-  receivedFeedbacks    PeerFeedback[] @relation("ReceivedFeedback")
-  createdPeerFeedbacks PeerFeedback[] @relation("CreatedPeerFeedback")
-  updatedPeerFeedbacks PeerFeedback[] @relation("UpdatedPeerFeedback")
-
-  createdAwardPrograms AwardProgram[] @relation("AwardProgramCreatedBy")
-  updatedAwardPrograms AwardProgram[] @relation("AwardProgramUpdatedBy")
-
-  createdAwardWinners AwardWinner[] @relation("AwardWinnerCreatedBy")
-  updatedAwardWinners AwardWinner[] @relation("AwardWinnerUpdatedBy")
-  awardWinners        AwardWinner[] @relation("EmployeeAwardWinners")
-
-  salaryRevisions        EmployeeSalaryRevision[]
-  createdSalaryRevisions EmployeeSalaryRevision[] @relation("CreatedSalaryRevisions")
-  updatedSalaryRevisions EmployeeSalaryRevision[] @relation("UpdatedSalaryRevisions")
-
-  createdEvaluationTemplates EmployeeEvaluationTemplate[] @relation("CreatedEvaluationTemplateBy")
-  updatedEvaluationTemplates EmployeeEvaluationTemplate[] @relation("UpdatedEvaluationTemplateBy")
-
-  createdTemplateMappings EmployeeEvaluationTemplateParameterMapping[] @relation("CreatedParameterAssignmentBy")
-  updatedTemplateMappings EmployeeEvaluationTemplateParameterMapping[] @relation("UpdatedParameterAssignmentBy")
-
-  evaluationsGiven    EmployeeEvaluation[] @relation("EvaluatorEmployee")
-  evaluationsReceived EmployeeEvaluation[] @relation("EvaluatedEmployee")
-  createdEvaluations  EmployeeEvaluation[] @relation("CreatedEvaluationBy")
-  updatedEvaluations  EmployeeEvaluation[] @relation("UpdatedEvaluationBy")
-
-  createdEvaluationResponses EmployeeEvaluationResponse[] @relation("CreatedEvaluationResponseBy")
-  updatedEvaluationResponses EmployeeEvaluationResponse[] @relation("UpdatedEvaluationResponseBy")
-
-  reviewedPerformanceGoals PerformanceGoal[] @relation("ReviewedGoals")
-  createdPerformanceGoals  PerformanceGoal[] @relation("CreatedPerformanceGoals")
-  updatedPerformanceGoals  PerformanceGoal[] @relation("UpdatedPerformanceGoals")
-
-  assignedGoals PerformanceGoalAssignment[] @relation("AssignedGoals")
-
-  starsGiven    StarRating[] @relation("GivenStars")
-  starsReceived StarRating[] @relation("ReceivedStars")
-
-  createdStarRatings StarRating[] @relation("CreatedStarRatingBy")
-  updatedStarRatings StarRating[] @relation("UpdatedStarRatingBy")
-
-  createdCompliances Compliance[] @relation("CreatedCompliances")
-  updatedCompliances Compliance[] @relation("UpdatedCompliances")
-
-  createdBoardMeetings BoardMeeting[] @relation("CreatedBoardMeetings")
-  updatedBoardMeetings BoardMeeting[] @relation("UpdatedBoardMeetings")
-
-  leaveApplications        LeaveApplication[] @relation("EmployeeLeaveApplications")
-  managerLeaveApplications LeaveApplication[] @relation("ManagerLeaveApplications")
-  hrLeaveApplications      LeaveApplication[] @relation("HRLeaveApplications")
-
-  createdLeaveApplications LeaveApplication[] @relation("CreatedLeaveApplications")
-  updatedLeaveApplications LeaveApplication[] @relation("UpdatedLeaveApplications")
-
-  leaveLedgers        LeaveLedger[] @relation("EmployeeLeaveLedger")
-  leaveLedgersCreated LeaveLedger[] @relation("CreatedLeaveLedgers")
-  leaveLedgersUpdated LeaveLedger[] @relation("UpdatedLeaveLedgers")
-
-  companyCalendarCreated CompanyCalendar[] @relation("CreatedCompanyCalendar")
-  companyCalendarUpdated CompanyCalendar[] @relation("UpdatedCompanyCalendar")
+  employeeDocuments        EmployeeDocument[]          @relation("EmployeeDocuments")
+  skillHobbies             EmployeeSkillHobby[]        @relation("SkillHobbyEmployee")
+  emergencyContacts        EmployeeEmergencyContact[]  @relation("EmergencyContacts")
+  employeePhotos           EmployeePhoto[]             @relation("EmployeePhotos")
+  employeeNotes            EmployeeNote[]              @relation("EmployeeNotes")
+  headDepartments          Department[]                @relation("DepartmentHead")
+  accessibleDocuments      Document[]                  @relation("EmployeeDocumentAccess")
+  providedFeedbacks        PeerFeedback[]              @relation("ProvidedFeedback")
+  receivedFeedbacks        PeerFeedback[]              @relation("ReceivedFeedback")
+  awardWinners             AwardWinner[]               @relation("EmployeeAwardWinners")
+  salaryRevisions          EmployeeSalaryRevision[]
+  evaluationsGiven         EmployeeEvaluation[]        @relation("EvaluatorEmployee")
+  evaluationsReceived      EmployeeEvaluation[]        @relation("EvaluatedEmployee")
+  reviewedPerformanceGoals PerformanceGoal[]           @relation("ReviewedGoals")
+  assignedGoals            PerformanceGoalAssignment[] @relation("AssignedGoals")
+  starsGiven               StarRating[]                @relation("GivenStars")
+  starsReceived            StarRating[]                @relation("ReceivedStars")
+  leaveApplications        LeaveApplication[]          @relation("EmployeeLeaveApplications")
+  managerLeaveApplications LeaveApplication[]          @relation("ManagerLeaveApplications")
+  hrLeaveApplications      LeaveApplication[]          @relation("HRLeaveApplications")
+  leaveLedgers             LeaveLedger[]               @relation("EmployeeLeaveLedger")
 }
 
 model EmployeeDocument {
@@ -188,9 +107,9 @@ model EmployeeDocument {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  employee  Employee  @relation("EmployeeDocuments", fields: [employee_id], references: [id])
-  createdBy Employee? @relation("CreatedEmployeeDocumentBy", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("UpdatedEmployeeDocumentBy", fields: [updated_by], references: [id])
+  employee  Employee @relation("EmployeeDocuments", fields: [employee_id], references: [id])
+  createdBy User?    @relation("CreatedEmployeeDocumentBy", fields: [created_by], references: [id])
+  updatedBy User?    @relation("UpdatedEmployeeDocumentBy", fields: [updated_by], references: [id])
 }
 
 model EmployeeSkillHobby {
@@ -203,9 +122,9 @@ model EmployeeSkillHobby {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  employee  Employee  @relation("SkillHobbyEmployee", fields: [employee_id], references: [id])
-  createdBy Employee? @relation("CreatedSkillHobbyBy", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("UpdatedSkillHobbyBy", fields: [updated_by], references: [id])
+  employee  Employee @relation("SkillHobbyEmployee", fields: [employee_id], references: [id])
+  createdBy User?    @relation("CreatedSkillHobbyBy", fields: [created_by], references: [id])
+  updatedBy User?    @relation("UpdatedSkillHobbyBy", fields: [updated_by], references: [id])
 }
 
 model EmployeeEmergencyContact {
@@ -219,9 +138,9 @@ model EmployeeEmergencyContact {
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
-  employee  Employee  @relation("EmergencyContacts", fields: [employee_id], references: [id])
-  createdBy Employee? @relation("CreatedEmergencyContactBy", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("UpdatedEmergencyContactBy", fields: [updated_by], references: [id])
+  employee  Employee @relation("EmergencyContacts", fields: [employee_id], references: [id])
+  createdBy User?    @relation("CreatedEmergencyContactBy", fields: [created_by], references: [id])
+  updatedBy User?    @relation("UpdatedEmergencyContactBy", fields: [updated_by], references: [id])
 }
 
 model EmployeePhoto {
@@ -234,9 +153,9 @@ model EmployeePhoto {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  employee  Employee  @relation("EmployeePhotos", fields: [employee_id], references: [id])
-  createdBy Employee? @relation("CreatedEmployeePhotoBy", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("UpdatedEmployeePhotoBy", fields: [updated_by], references: [id])
+  employee  Employee @relation("EmployeePhotos", fields: [employee_id], references: [id])
+  createdBy User?    @relation("CreatedEmployeePhotoBy", fields: [created_by], references: [id])
+  updatedBy User?    @relation("UpdatedEmployeePhotoBy", fields: [updated_by], references: [id])
 }
 
 model EmployeeNote {
@@ -248,9 +167,9 @@ model EmployeeNote {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  employee  Employee  @relation("EmployeeNotes", fields: [employee_id], references: [id])
-  createdBy Employee? @relation("CreatedEmployeeNoteBy", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("UpdatedEmployeeNoteBy", fields: [updated_by], references: [id])
+  employee  Employee @relation("EmployeeNotes", fields: [employee_id], references: [id])
+  createdBy User?    @relation("CreatedEmployeeNoteBy", fields: [created_by], references: [id])
+  updatedBy User?    @relation("UpdatedEmployeeNoteBy", fields: [updated_by], references: [id])
 }
 
 model Department {
@@ -270,8 +189,8 @@ model Department {
   children Department[] @relation("ParentDepartment")
 
   departmentHead Employee? @relation("DepartmentHead", fields: [department_head_id], references: [id])
-  createdBy      Employee? @relation("DepartmentCreatedBy", fields: [created_by], references: [id])
-  updatedBy      Employee? @relation("DepartmentUpdatedBy", fields: [updated_by], references: [id])
+  createdBy      User?     @relation("DepartmentCreatedBy", fields: [created_by], references: [id])
+  updatedBy      User?     @relation("DepartmentUpdatedBy", fields: [updated_by], references: [id])
 }
 
 model Role {
@@ -284,8 +203,8 @@ model Role {
 
   employees Employee[]
 
-  createdBy Employee? @relation("RoleCreatedBy", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("RoleUpdatedBy", fields: [updated_by], references: [id])
+  createdBy User? @relation("RoleCreatedBy", fields: [created_by], references: [id])
+  updatedBy User? @relation("RoleUpdatedBy", fields: [updated_by], references: [id])
 }
 
 model EmployeeLevel {
@@ -297,8 +216,8 @@ model EmployeeLevel {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  createdBy Employee? @relation("EmployeeLevelCreatedBy", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("EmployeeLevelUpdatedBy", fields: [updated_by], references: [id])
+  createdBy User? @relation("EmployeeLevelCreatedBy", fields: [created_by], references: [id])
+  updatedBy User? @relation("EmployeeLevelUpdatedBy", fields: [updated_by], references: [id])
 
   employees Employee[]
 }
@@ -312,8 +231,8 @@ model DocumentCategory {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  createdBy Employee?  @relation("DocumentCategoryCreatedBy", fields: [created_by], references: [id])
-  updatedBy Employee?  @relation("DocumentCategoryUpdatedBy", fields: [updated_by], references: [id])
+  createdBy User?      @relation("DocumentCategoryCreatedBy", fields: [created_by], references: [id])
+  updatedBy User?      @relation("DocumentCategoryUpdatedBy", fields: [updated_by], references: [id])
   documents Document[]
 }
 
@@ -338,8 +257,8 @@ model Document {
   document_category_id Int?
   category             DocumentCategory? @relation(fields: [document_category_id], references: [id])
 
-  createdBy Employee? @relation("DocumentCreatedBy", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("DocumentUpdatedBy", fields: [updated_by], references: [id])
+  createdBy User? @relation("DocumentCreatedBy", fields: [created_by], references: [id])
+  updatedBy User? @relation("DocumentUpdatedBy", fields: [updated_by], references: [id])
 
   grantedAccess Employee[] @relation("EmployeeDocumentAccess")
 }
@@ -359,8 +278,8 @@ model EmployeeRatingParameter {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  createdBy Employee? @relation("CreatedRatingParameterBy", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("UpdatedRatingParameterBy", fields: [updated_by], references: [id])
+  createdBy User? @relation("CreatedRatingParameterBy", fields: [created_by], references: [id])
+  updatedBy User? @relation("UpdatedRatingParameterBy", fields: [updated_by], references: [id])
 
   parameterAssignments EmployeeEvaluationTemplateParameterMapping[]
 }
@@ -383,8 +302,8 @@ model PeerFeedback {
 
   providedBy Employee? @relation("ProvidedFeedback", fields: [provided_by], references: [id])
   providedTo Employee? @relation("ReceivedFeedback", fields: [provided_to], references: [id])
-  createdBy  Employee? @relation("CreatedPeerFeedback", fields: [created_by], references: [id])
-  updatedBy  Employee? @relation("UpdatedPeerFeedback", fields: [updated_by], references: [id])
+  createdBy  User?     @relation("CreatedPeerFeedback", fields: [created_by], references: [id])
+  updatedBy  User?     @relation("UpdatedPeerFeedback", fields: [updated_by], references: [id])
 }
 
 model AwardProgram {
@@ -400,8 +319,8 @@ model AwardProgram {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  createdBy    Employee?     @relation("AwardProgramCreatedBy", fields: [created_by], references: [id])
-  updatedBy    Employee?     @relation("AwardProgramUpdatedBy", fields: [updated_by], references: [id])
+  createdBy    User?         @relation("AwardProgramCreatedBy", fields: [created_by], references: [id])
+  updatedBy    User?         @relation("AwardProgramUpdatedBy", fields: [updated_by], references: [id])
   awardWinners AwardWinner[] @relation("AwardProgramAwardWinners")
 }
 
@@ -418,8 +337,8 @@ model AwardWinner {
 
   employee     Employee?     @relation("EmployeeAwardWinners", fields: [employee_id], references: [id])
   awardProgram AwardProgram? @relation("AwardProgramAwardWinners", fields: [award_program_id], references: [id])
-  createdBy    Employee?     @relation("AwardWinnerCreatedBy", fields: [created_by], references: [id])
-  updatedBy    Employee?     @relation("AwardWinnerUpdatedBy", fields: [updated_by], references: [id])
+  createdBy    User?         @relation("AwardWinnerCreatedBy", fields: [created_by], references: [id])
+  updatedBy    User?         @relation("AwardWinnerUpdatedBy", fields: [updated_by], references: [id])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -448,9 +367,9 @@ model EmployeeSalaryRevision {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  employee  Employee  @relation(fields: [employee_id], references: [id])
-  createdBy Employee? @relation("CreatedSalaryRevisions", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("UpdatedSalaryRevisions", fields: [updated_by], references: [id])
+  employee  Employee @relation(fields: [employee_id], references: [id])
+  createdBy User?    @relation("CreatedSalaryRevisions", fields: [created_by], references: [id])
+  updatedBy User?    @relation("UpdatedSalaryRevisions", fields: [updated_by], references: [id])
 }
 
 enum EvaluationTemplateStatus {
@@ -475,8 +394,8 @@ model EmployeeEvaluationTemplate {
   created_at DateTime? @default(now())
   updated_at DateTime? @updatedAt
 
-  createdBy Employee? @relation("CreatedEvaluationTemplateBy", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("UpdatedEvaluationTemplateBy", fields: [updated_by], references: [id])
+  createdBy User? @relation("CreatedEvaluationTemplateBy", fields: [created_by], references: [id])
+  updatedBy User? @relation("UpdatedEvaluationTemplateBy", fields: [updated_by], references: [id])
 
   parameterMapping EmployeeEvaluationTemplateParameterMapping[] @relation("TemplateToMapping")
 
@@ -494,8 +413,8 @@ model EmployeeEvaluationTemplateParameterMapping {
 
   template  EmployeeEvaluationTemplate   @relation("TemplateToMapping", fields: [template_id], references: [id], onDelete: Cascade)
   parameter EmployeeRatingParameter      @relation(fields: [parameter_id], references: [id])
-  createdBy Employee?                    @relation("CreatedParameterAssignmentBy", fields: [created_by], references: [id])
-  updatedBy Employee?                    @relation("UpdatedParameterAssignmentBy", fields: [updated_by], references: [id])
+  createdBy User?                        @relation("CreatedParameterAssignmentBy", fields: [created_by], references: [id])
+  updatedBy User?                        @relation("UpdatedParameterAssignmentBy", fields: [updated_by], references: [id])
   responses EmployeeEvaluationResponse[] @relation("ParameterToResponses")
 }
 
@@ -518,8 +437,8 @@ model EmployeeEvaluation {
   evaluatedEmployee Employee? @relation("EvaluatedEmployee", fields: [evaluation_for_employee_id], references: [id])
   evaluatorEmployee Employee? @relation("EvaluatorEmployee", fields: [evaluation_by_employee_id], references: [id])
 
-  createdBy Employee? @relation("CreatedEvaluationBy", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("UpdatedEvaluationBy", fields: [updated_by], references: [id])
+  createdBy User? @relation("CreatedEvaluationBy", fields: [created_by], references: [id])
+  updatedBy User? @relation("UpdatedEvaluationBy", fields: [updated_by], references: [id])
 
   responses EmployeeEvaluationResponse[] @relation("EvaluationToResponses")
 }
@@ -538,8 +457,8 @@ model EmployeeEvaluationResponse {
   evaluation          EmployeeEvaluation?                         @relation("EvaluationToResponses", fields: [employee_evaluation_id], references: [id], onDelete: Cascade)
   parameterAssignment EmployeeEvaluationTemplateParameterMapping? @relation("ParameterToResponses", fields: [parameter_mapping_id], references: [id], onDelete: Cascade)
 
-  createdBy Employee? @relation("CreatedEvaluationResponseBy", fields: [created_by], references: [id])
-  updatedBy Employee? @relation("UpdatedEvaluationResponseBy", fields: [updated_by], references: [id])
+  createdBy User? @relation("CreatedEvaluationResponseBy", fields: [created_by], references: [id])
+  updatedBy User? @relation("UpdatedEvaluationResponseBy", fields: [updated_by], references: [id])
 }
 
 enum GoalResult {
@@ -570,8 +489,8 @@ model PerformanceGoal {
   updated_at DateTime @updatedAt
 
   reviewer  Employee? @relation("ReviewedGoals", fields: [reviewer_id], references: [id], onDelete: SetNull)
-  createdBy Employee? @relation("CreatedPerformanceGoals", fields: [created_by], references: [id], onDelete: SetNull)
-  updatedBy Employee? @relation("UpdatedPerformanceGoals", fields: [updated_by], references: [id], onDelete: SetNull)
+  createdBy User?     @relation("CreatedPerformanceGoals", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy User?     @relation("UpdatedPerformanceGoals", fields: [updated_by], references: [id], onDelete: SetNull)
 
   assignments PerformanceGoalAssignment[]
   starRatings StarRating[]                @relation("GoalStarRatings")
@@ -617,8 +536,8 @@ model StarRating {
   givenBy Employee? @relation("GivenStars", fields: [given_by_id], references: [id], onDelete: Cascade)
   givenTo Employee? @relation("ReceivedStars", fields: [given_to_id], references: [id], onDelete: Cascade)
 
-  createdBy Employee? @relation("CreatedStarRatingBy", fields: [created_by], references: [id], onDelete: SetNull)
-  updatedBy Employee? @relation("UpdatedStarRatingBy", fields: [updated_by], references: [id], onDelete: SetNull)
+  createdBy User? @relation("CreatedStarRatingBy", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy User? @relation("UpdatedStarRatingBy", fields: [updated_by], references: [id], onDelete: SetNull)
 
   performanceGoal PerformanceGoal? @relation("GoalStarRatings", fields: [entity_id], references: [id], onDelete: SetNull)
 }
@@ -636,8 +555,8 @@ model Compliance {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  createdBy Employee? @relation("CreatedCompliances", fields: [created_by], references: [id], onDelete: SetNull)
-  updatedBy Employee? @relation("UpdatedCompliances", fields: [updated_by], references: [id], onDelete: SetNull)
+  createdBy User? @relation("CreatedCompliances", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy User? @relation("UpdatedCompliances", fields: [updated_by], references: [id], onDelete: SetNull)
 }
 
 model BoardMeeting {
@@ -654,8 +573,8 @@ model BoardMeeting {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  createdBy Employee? @relation("CreatedBoardMeetings", fields: [created_by], references: [id], onDelete: SetNull)
-  updatedBy Employee? @relation("UpdatedBoardMeetings", fields: [updated_by], references: [id], onDelete: SetNull)
+  createdBy User? @relation("CreatedBoardMeetings", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy User? @relation("UpdatedBoardMeetings", fields: [updated_by], references: [id], onDelete: SetNull)
 }
 
 enum AttendanceType {
@@ -706,8 +625,8 @@ model LeaveApplication {
   manager  Employee? @relation("ManagerLeaveApplications", fields: [manager_id], references: [id], onDelete: SetNull)
   hr       Employee? @relation("HRLeaveApplications", fields: [hr_id], references: [id], onDelete: SetNull)
 
-  createdBy Employee? @relation("CreatedLeaveApplications", fields: [created_by], references: [id], onDelete: SetNull)
-  updatedBy Employee? @relation("UpdatedLeaveApplications", fields: [updated_by], references: [id], onDelete: SetNull)
+  createdBy User? @relation("CreatedLeaveApplications", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy User? @relation("UpdatedLeaveApplications", fields: [updated_by], references: [id], onDelete: SetNull)
 
   leaveLedgers LeaveLedger[] @relation("LeaveApplicationLedger")
 }
@@ -728,8 +647,8 @@ model LeaveLedger {
 
   employee         Employee?         @relation("EmployeeLeaveLedger", fields: [employee_id], references: [id], onDelete: Cascade)
   leaveApplication LeaveApplication? @relation("LeaveApplicationLedger", fields: [leave_application_id], references: [id], onDelete: SetNull)
-  createdBy        Employee?         @relation("CreatedLeaveLedgers", fields: [created_by], references: [id], onDelete: SetNull)
-  updatedBy        Employee?         @relation("UpdatedLeaveLedgers", fields: [updated_by], references: [id], onDelete: SetNull)
+  createdBy        User?             @relation("CreatedLeaveLedgers", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy        User?             @relation("UpdatedLeaveLedgers", fields: [updated_by], references: [id], onDelete: SetNull)
 }
 
 model CompanyCalendar {
@@ -743,8 +662,8 @@ model CompanyCalendar {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  createdBy Employee? @relation("CreatedCompanyCalendar", fields: [created_by], references: [id], onDelete: SetNull)
-  updatedBy Employee? @relation("UpdatedCompanyCalendar", fields: [updated_by], references: [id], onDelete: SetNull)
+  createdBy User? @relation("CreatedCompanyCalendar", fields: [created_by], references: [id], onDelete: SetNull)
+  updatedBy User? @relation("UpdatedCompanyCalendar", fields: [updated_by], references: [id], onDelete: SetNull)
 }
 
 enum UserRole {
@@ -768,6 +687,84 @@ model User {
 
   createdEmployees Employee[] @relation("EmployeeCreatedBy")
   updatedEmployees Employee[] @relation("EmployeeUpdatedBy")
+
+  createdEmployeeDocuments EmployeeDocument[] @relation("CreatedEmployeeDocumentBy")
+  updatedEmployeeDocuments EmployeeDocument[] @relation("UpdatedEmployeeDocumentBy")
+
+  createdSkillHobbies EmployeeSkillHobby[] @relation("CreatedSkillHobbyBy")
+  updatedSkillHobbies EmployeeSkillHobby[] @relation("UpdatedSkillHobbyBy")
+
+  createdEmergencyContacts EmployeeEmergencyContact[] @relation("CreatedEmergencyContactBy")
+  updatedEmergencyContacts EmployeeEmergencyContact[] @relation("UpdatedEmergencyContactBy")
+
+  createdEmployeePhotos EmployeePhoto[] @relation("CreatedEmployeePhotoBy")
+  updatedEmployeePhotos EmployeePhoto[] @relation("UpdatedEmployeePhotoBy")
+
+  createdEmployeeNotes EmployeeNote[] @relation("CreatedEmployeeNoteBy")
+  updatedEmployeeNotes EmployeeNote[] @relation("UpdatedEmployeeNoteBy")
+
+  createdDepartments Department[] @relation("DepartmentCreatedBy")
+  updatedDepartments Department[] @relation("DepartmentUpdatedBy")
+
+  createdRoles Role[] @relation("RoleCreatedBy")
+  updatedRoles Role[] @relation("RoleUpdatedBy")
+
+  createdEmployeeLevels EmployeeLevel[] @relation("EmployeeLevelCreatedBy")
+  updatedEmployeeLevels EmployeeLevel[] @relation("EmployeeLevelUpdatedBy")
+
+  createdDocumentCategories DocumentCategory[] @relation("DocumentCategoryCreatedBy")
+  updatedDocumentCategories DocumentCategory[] @relation("DocumentCategoryUpdatedBy")
+
+  createdDocuments Document[] @relation("DocumentCreatedBy")
+  updatedDocuments Document[] @relation("DocumentUpdatedBy")
+
+  created_rating_parameters EmployeeRatingParameter[] @relation("CreatedRatingParameterBy")
+  updated_rating_parameters EmployeeRatingParameter[] @relation("UpdatedRatingParameterBy")
+
+  createdPeerFeedbacks PeerFeedback[] @relation("CreatedPeerFeedback")
+  updatedPeerFeedbacks PeerFeedback[] @relation("UpdatedPeerFeedback")
+
+  createdAwardPrograms AwardProgram[] @relation("AwardProgramCreatedBy")
+  updatedAwardPrograms AwardProgram[] @relation("AwardProgramUpdatedBy")
+
+  createdAwardWinners AwardWinner[] @relation("AwardWinnerCreatedBy")
+  updatedAwardWinners AwardWinner[] @relation("AwardWinnerUpdatedBy")
+
+  createdSalaryRevisions EmployeeSalaryRevision[] @relation("CreatedSalaryRevisions")
+  updatedSalaryRevisions EmployeeSalaryRevision[] @relation("UpdatedSalaryRevisions")
+
+  createdEvaluationTemplates EmployeeEvaluationTemplate[] @relation("CreatedEvaluationTemplateBy")
+  updatedEvaluationTemplates EmployeeEvaluationTemplate[] @relation("UpdatedEvaluationTemplateBy")
+
+  createdTemplateMappings EmployeeEvaluationTemplateParameterMapping[] @relation("CreatedParameterAssignmentBy")
+  updatedTemplateMappings EmployeeEvaluationTemplateParameterMapping[] @relation("UpdatedParameterAssignmentBy")
+
+  createdEvaluations EmployeeEvaluation[] @relation("CreatedEvaluationBy")
+  updatedEvaluations EmployeeEvaluation[] @relation("UpdatedEvaluationBy")
+
+  createdEvaluationResponses EmployeeEvaluationResponse[] @relation("CreatedEvaluationResponseBy")
+  updatedEvaluationResponses EmployeeEvaluationResponse[] @relation("UpdatedEvaluationResponseBy")
+
+  createdPerformanceGoals PerformanceGoal[] @relation("CreatedPerformanceGoals")
+  updatedPerformanceGoals PerformanceGoal[] @relation("UpdatedPerformanceGoals")
+
+  createdStarRatings StarRating[] @relation("CreatedStarRatingBy")
+  updatedStarRatings StarRating[] @relation("UpdatedStarRatingBy")
+
+  createdCompliances Compliance[] @relation("CreatedCompliances")
+  updatedCompliances Compliance[] @relation("UpdatedCompliances")
+
+  createdBoardMeetings BoardMeeting[] @relation("CreatedBoardMeetings")
+  updatedBoardMeetings BoardMeeting[] @relation("UpdatedBoardMeetings")
+
+  createdLeaveApplications LeaveApplication[] @relation("CreatedLeaveApplications")
+  updatedLeaveApplications LeaveApplication[] @relation("UpdatedLeaveApplications")
+
+  leaveLedgersCreated LeaveLedger[] @relation("CreatedLeaveLedgers")
+  leaveLedgersUpdated LeaveLedger[] @relation("UpdatedLeaveLedgers")
+
+  companyCalendarCreated CompanyCalendar[] @relation("CreatedCompanyCalendar")
+  companyCalendarUpdated CompanyCalendar[] @relation("UpdatedCompanyCalendar")
 
   requestedRecruitments RecruitmentRequest[] @relation("RequestedRecruitments")
   createdRecruitments   RecruitmentRequest[] @relation("CreatedRecruitments")
