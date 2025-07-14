@@ -54,6 +54,14 @@ export class AwardProgramsService {
         skip,
         take: limit,
         orderBy: { id: 'desc' },
+        include: {
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+        },
       }),
       this.prisma.awardProgram.count({ where }),
     ]);
@@ -103,6 +111,14 @@ export class AwardProgramsService {
       const updated = await this.prisma.awardProgram.update({
         where: { id },
         data,
+        include: {
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+        },
       });
       return {
         message: 'Award program updated successfully',
