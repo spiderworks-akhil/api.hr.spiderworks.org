@@ -1,5 +1,6 @@
-import { IsEnum, IsString, IsOptional } from 'class-validator';
+import { IsEnum, IsString, IsOptional, IsInt } from 'class-validator';
 import { ApprovalStatus } from './leave-application-enums.dto';
+import { Type } from 'class-transformer';
 
 export class ReviewLeaveApplicationDto {
   @IsEnum(ApprovalStatus)
@@ -9,6 +10,8 @@ export class ReviewLeaveApplicationDto {
   @IsOptional()
   remarks?: string;
 
+  @IsInt()
   @IsOptional()
+  @Type(() => Number)
   updated_by?: number;
 }
