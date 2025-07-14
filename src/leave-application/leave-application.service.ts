@@ -415,6 +415,8 @@ export class LeaveApplicationService {
                   ),
                 ),
                 remarks: updated.reason ?? null,
+                created_by: dto.updated_by,
+                updated_by: dto.updated_by,
               });
             }
 
@@ -550,6 +552,8 @@ export class LeaveApplicationService {
                   ),
                 ),
                 remarks: updated.reason ?? null,
+                created_by: dto.updated_by,
+                updated_by: dto.updated_by,
               });
             }
             current.setUTCDate(current.getUTCDate() + 1);
