@@ -42,8 +42,12 @@ export class LeaveLedgerService {
           include: {
             employee: { select: { id: true, name: true } },
             leaveApplication: { select: { id: true } },
-            createdBy: { select: { id: true, name: true } },
-            updatedBy: { select: { id: true, name: true } },
+            createdBy: {
+              select: { id: true, first_name: true, last_name: true },
+            },
+            updatedBy: {
+              select: { id: true, first_name: true, last_name: true },
+            },
           },
         });
         return ledger;
@@ -82,8 +86,12 @@ export class LeaveLedgerService {
         include: {
           employee: { select: { id: true, name: true } },
           leaveApplication: { select: { id: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       }),
       this.prisma.leaveLedger.count({ where }),
@@ -98,8 +106,8 @@ export class LeaveLedgerService {
       include: {
         employee: { select: { id: true, name: true } },
         leaveApplication: { select: { id: true } },
-        createdBy: { select: { id: true, name: true } },
-        updatedBy: { select: { id: true, name: true } },
+        createdBy: { select: { id: true, first_name: true, last_name: true } },
+        updatedBy: { select: { id: true, first_name: true, last_name: true } },
       },
     });
     if (!leaveLedger) {
@@ -114,8 +122,8 @@ export class LeaveLedgerService {
       include: {
         employee: true,
         leaveApplication: true,
-        createdBy: { select: { id: true, name: true } },
-        updatedBy: { select: { id: true, name: true } },
+        createdBy: { select: { id: true, first_name: true, last_name: true } },
+        updatedBy: { select: { id: true, first_name: true, last_name: true } },
       },
     });
     if (!existing) {
@@ -153,8 +161,12 @@ export class LeaveLedgerService {
         include: {
           employee: { select: { id: true, name: true } },
           leaveApplication: { select: { id: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
 

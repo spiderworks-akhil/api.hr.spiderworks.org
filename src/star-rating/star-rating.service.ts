@@ -55,8 +55,12 @@ export class StarRatingService {
           include: {
             givenBy: { select: { id: true, name: true } },
             givenTo: { select: { id: true, name: true } },
-            createdBy: { select: { id: true, name: true } },
-            updatedBy: { select: { id: true, name: true } },
+            createdBy: {
+              select: { id: true, first_name: true, last_name: true },
+            },
+            updatedBy: {
+              select: { id: true, first_name: true, last_name: true },
+            },
           },
         });
         return rating;
@@ -124,8 +128,12 @@ export class StarRatingService {
         include: {
           givenBy: { select: { id: true, name: true } },
           givenTo: { select: { id: true, name: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       }),
       this.prisma.starRating.count({ where }),
@@ -140,8 +148,8 @@ export class StarRatingService {
       include: {
         givenBy: { select: { id: true, name: true } },
         givenTo: { select: { id: true, name: true } },
-        createdBy: { select: { id: true, name: true } },
-        updatedBy: { select: { id: true, name: true } },
+        createdBy: { select: { id: true, first_name: true, last_name: true } },
+        updatedBy: { select: { id: true, first_name: true, last_name: true } },
       },
     });
     if (!starRating) {
@@ -239,8 +247,12 @@ export class StarRatingService {
         include: {
           givenBy: { select: { id: true, name: true } },
           givenTo: { select: { id: true, name: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
 

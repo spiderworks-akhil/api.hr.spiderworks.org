@@ -47,8 +47,12 @@ export class PerformanceGoalService {
         data,
         include: {
           reviewer: { select: { id: true, name: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
           assignments: {
             include: { user: { select: { id: true, name: true } } },
           },
@@ -86,8 +90,12 @@ export class PerformanceGoalService {
         orderBy: { id: 'desc' },
         include: {
           reviewer: { select: { id: true, name: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
           assignments: {
             include: { user: { select: { id: true, name: true } } },
           },
@@ -149,8 +157,12 @@ export class PerformanceGoalService {
         data,
         include: {
           reviewer: { select: { id: true, name: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
           assignments: {
             include: { user: { select: { id: true, name: true } } },
           },
@@ -208,8 +220,12 @@ export class PerformanceGoalService {
           data,
           include: {
             reviewer: { select: { id: true, name: true } },
-            createdBy: { select: { id: true, name: true } },
-            updatedBy: { select: { id: true, name: true } },
+            createdBy: {
+              select: { id: true, first_name: true, last_name: true },
+            },
+            updatedBy: {
+              select: { id: true, first_name: true, last_name: true },
+            },
             assignments: {
               include: { user: { select: { id: true, name: true } } },
             },
@@ -220,8 +236,12 @@ export class PerformanceGoalService {
           include: {
             givenBy: { select: { id: true; name: true } };
             givenTo: { select: { id: true; name: true } };
-            createdBy: { select: { id: true; name: true } };
-            updatedBy: { select: { id: true; name: true } };
+            createdBy: {
+              select: { id: true; first_name: true; last_name: true };
+            };
+            updatedBy: {
+              select: { id: true; first_name: true; last_name: true };
+            };
           };
         }>[] = [];
         const assignedUserIds = existing.assignments.map((a) => a.user_id);
@@ -259,8 +279,12 @@ export class PerformanceGoalService {
                 include: {
                   givenBy: { select: { id: true, name: true } },
                   givenTo: { select: { id: true, name: true } },
-                  createdBy: { select: { id: true, name: true } },
-                  updatedBy: { select: { id: true, name: true } },
+                  createdBy: {
+                    select: { id: true, first_name: true, last_name: true },
+                  },
+                  updatedBy: {
+                    select: { id: true, first_name: true, last_name: true },
+                  },
                 },
               });
               starRatings.push(starRating);
@@ -284,8 +308,12 @@ export class PerformanceGoalService {
                 include: {
                   givenBy: { select: { id: true, name: true } },
                   givenTo: { select: { id: true, name: true } },
-                  createdBy: { select: { id: true, name: true } },
-                  updatedBy: { select: { id: true, name: true } },
+                  createdBy: {
+                    select: { id: true, first_name: true, last_name: true },
+                  },
+                  updatedBy: {
+                    select: { id: true, first_name: true, last_name: true },
+                  },
                 },
               });
               starRatings.push(starRating);
@@ -316,8 +344,12 @@ export class PerformanceGoalService {
                 include: {
                   givenBy: { select: { id: true, name: true } },
                   givenTo: { select: { id: true, name: true } },
-                  createdBy: { select: { id: true, name: true } },
-                  updatedBy: { select: { id: true, name: true } },
+                  createdBy: {
+                    select: { id: true, first_name: true, last_name: true },
+                  },
+                  updatedBy: {
+                    select: { id: true, first_name: true, last_name: true },
+                  },
                 },
               });
               starRatings.push(starRating);
@@ -341,8 +373,12 @@ export class PerformanceGoalService {
                 include: {
                   givenBy: { select: { id: true, name: true } },
                   givenTo: { select: { id: true, name: true } },
-                  createdBy: { select: { id: true, name: true } },
-                  updatedBy: { select: { id: true, name: true } },
+                  createdBy: {
+                    select: { id: true, first_name: true, last_name: true },
+                  },
+                  updatedBy: {
+                    select: { id: true, first_name: true, last_name: true },
+                  },
                 },
               });
               starRatings.push(starRating);

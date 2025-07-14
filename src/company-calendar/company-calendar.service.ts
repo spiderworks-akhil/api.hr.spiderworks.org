@@ -30,8 +30,12 @@ export class CompanyCalendarService {
         const calendar = await prisma.companyCalendar.create({
           data,
           include: {
-            createdBy: { select: { id: true, name: true } },
-            updatedBy: { select: { id: true, name: true } },
+            createdBy: {
+              select: { id: true, first_name: true, last_name: true },
+            },
+            updatedBy: {
+              select: { id: true, first_name: true, last_name: true },
+            },
           },
         });
         return calendar;
@@ -73,8 +77,12 @@ export class CompanyCalendarService {
         take: limit,
         orderBy: { date: 'desc' },
         include: {
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       }),
       this.prisma.companyCalendar.count({ where }),
@@ -87,8 +95,8 @@ export class CompanyCalendarService {
     const companyCalendar = await this.prisma.companyCalendar.findUnique({
       where: { id },
       include: {
-        createdBy: { select: { id: true, name: true } },
-        updatedBy: { select: { id: true, name: true } },
+        createdBy: { select: { id: true, first_name: true, last_name: true } },
+        updatedBy: { select: { id: true, first_name: true, last_name: true } },
       },
     });
     if (!companyCalendar) {
@@ -103,8 +111,8 @@ export class CompanyCalendarService {
     const existing = await this.prisma.companyCalendar.findUnique({
       where: { id },
       include: {
-        createdBy: { select: { id: true, name: true } },
-        updatedBy: { select: { id: true, name: true } },
+        createdBy: { select: { id: true, first_name: true, last_name: true } },
+        updatedBy: { select: { id: true, first_name: true, last_name: true } },
       },
     });
     if (!existing) {
@@ -129,8 +137,12 @@ export class CompanyCalendarService {
         where: { id },
         data,
         include: {
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
 

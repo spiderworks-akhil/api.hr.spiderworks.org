@@ -84,8 +84,12 @@ export class LeaveApplicationService {
               employee: { select: { id: true, name: true } },
               manager: { select: { id: true, name: true } },
               hr: { select: { id: true, name: true } },
-              createdBy: { select: { id: true, name: true } },
-              updatedBy: { select: { id: true, name: true } },
+              createdBy: {
+                select: { id: true, first_name: true, last_name: true },
+              },
+              updatedBy: {
+                select: { id: true, first_name: true, last_name: true },
+              },
             },
           });
           return application;
@@ -158,8 +162,12 @@ export class LeaveApplicationService {
           employee: { select: { id: true, name: true } },
           manager: { select: { id: true, name: true } },
           hr: { select: { id: true, name: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       }),
       this.prisma.leaveApplication.count({ where }),
@@ -175,8 +183,8 @@ export class LeaveApplicationService {
         employee: { select: { id: true, name: true } },
         manager: { select: { id: true, name: true } },
         hr: { select: { id: true, name: true } },
-        createdBy: { select: { id: true, name: true } },
-        updatedBy: { select: { id: true, name: true } },
+        createdBy: { select: { id: true, first_name: true, last_name: true } },
+        updatedBy: { select: { id: true, first_name: true, last_name: true } },
       },
     });
     if (!leaveApplication) {
@@ -278,8 +286,12 @@ export class LeaveApplicationService {
           employee: { select: { id: true, name: true } },
           manager: { select: { id: true, name: true } },
           hr: { select: { id: true, name: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
 
@@ -327,8 +339,12 @@ export class LeaveApplicationService {
           employee: { select: { id: true, name: true } },
           manager: { select: { id: true, name: true } },
           hr: { select: { id: true, name: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
 
@@ -455,8 +471,12 @@ export class LeaveApplicationService {
           employee: { select: { id: true, name: true } },
           manager: { select: { id: true, name: true } },
           hr: { select: { id: true, name: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
 

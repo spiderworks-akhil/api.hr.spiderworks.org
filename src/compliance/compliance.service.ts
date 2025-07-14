@@ -35,8 +35,12 @@ export class ComplianceService {
       const compliance = await this.prisma.compliance.create({
         data,
         include: {
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
 
@@ -71,8 +75,12 @@ export class ComplianceService {
         take: limit,
         orderBy: { id: 'desc' },
         include: {
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       }),
       this.prisma.compliance.count({ where }),
@@ -109,8 +117,12 @@ export class ComplianceService {
         where: { id },
         data,
         include: {
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
 

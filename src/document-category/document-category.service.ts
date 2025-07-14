@@ -28,8 +28,12 @@ export class DocumentCategoryService {
       const documentCategory = await this.prisma.documentCategory.create({
         data,
         include: {
-          createdBy: true,
-          updatedBy: true,
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
       return {
@@ -59,8 +63,12 @@ export class DocumentCategoryService {
         take: limit,
         orderBy: { id: 'desc' },
         include: {
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       }),
       this.prisma.documentCategory.count({ where }),
@@ -97,8 +105,12 @@ export class DocumentCategoryService {
         where: { id },
         data,
         include: {
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
       return {

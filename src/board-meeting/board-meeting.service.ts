@@ -32,8 +32,12 @@ export class BoardMeetingService {
       const boardMeeting = await this.prisma.boardMeeting.create({
         data,
         include: {
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
 
@@ -70,8 +74,12 @@ export class BoardMeetingService {
         take: limit,
         orderBy: { id: 'desc' },
         include: {
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       }),
       this.prisma.boardMeeting.count({ where }),
@@ -107,8 +115,12 @@ export class BoardMeetingService {
         where: { id },
         data,
         include: {
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
 

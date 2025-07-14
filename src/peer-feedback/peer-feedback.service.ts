@@ -68,8 +68,12 @@ export class PeerFeedbackService {
         include: {
           providedBy: { select: { id: true, name: true } },
           providedTo: { select: { id: true, name: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       }),
       this.prisma.peerFeedback.count({ where }),
@@ -117,8 +121,12 @@ export class PeerFeedbackService {
         include: {
           providedBy: { select: { id: true, name: true } },
           providedTo: { select: { id: true, name: true } },
-          createdBy: { select: { id: true, name: true } },
-          updatedBy: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
         },
       });
       return {
