@@ -14,6 +14,16 @@ export class CompanyCalendarService {
 
   async create(dto: CreateCompanyCalendarDto) {
     try {
+      if (dto.date) {
+        const existing = await this.prisma.companyCalendar.findFirst({
+          where: { date: new Date(dto.date) },
+        });
+        if (existing) {
+          throw new BadRequestException(
+            'A company calendar entry with this date already exists',
+          );
+        }
+      }
       const data: Prisma.CompanyCalendarCreateInput = {
         date: dto.date ? new Date(dto.date) : undefined,
         is_holiday: dto.is_holiday,
@@ -122,6 +132,19 @@ export class CompanyCalendarService {
     }
 
     try {
+      if (dto.date) {
+        const duplicate = await this.prisma.companyCalendar.findFirst({
+          where: {
+            date: new Date(dto.date),
+            id: { not: id },
+          },
+        });
+        if (duplicate) {
+          throw new BadRequestException(
+            'A company calendar entry with this date already exists',
+          );
+        }
+      }
       const data: Prisma.CompanyCalendarUpdateInput = {
         date: dto.date ? new Date(dto.date) : undefined,
         is_holiday: dto.is_holiday,
