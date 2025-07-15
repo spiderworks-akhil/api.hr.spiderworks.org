@@ -193,4 +193,28 @@ export class RecruitmentRequestService {
       );
     }
   }
+
+  async remove(id: number) {
+    try {
+      const request = await this.prisma.recruitmentRequest.findUnique({
+        where: { id },
+      });
+      if (!request) {
+        throw new NotFoundException(
+          `Recruitment request with ID ${id} not found`,
+        );
+      }
+      const deleted = await this.prisma.recruitmentRequest.delete({
+        where: { id },
+      });
+      return {
+        message: `Recruitment request with ID ${id} deleted successfully`,
+        request: deleted,
+      };
+    } catch (error) {
+      throw new BadRequestException(
+        error.message || 'Failed to delete recruitment request',
+      );
+    }
+  }
 }

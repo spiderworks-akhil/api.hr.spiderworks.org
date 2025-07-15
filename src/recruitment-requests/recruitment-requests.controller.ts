@@ -10,6 +10,7 @@ import {
   ValidationPipe,
   ParseIntPipe,
   BadRequestException,
+  Delete,
 } from '@nestjs/common';
 import { RecruitmentRequestService } from './recruitment-requests.service';
 import { CreateRecruitmentRequestDto } from './dto/create-recruitment-request.dto';
@@ -82,5 +83,10 @@ export class RecruitmentRequestController {
   @Get('view/:id')
   async view(@Param('id', ParseIntPipe) id: number) {
     return this.recruitmentRequestService.getRequestById(id);
+  }
+
+  @Delete('delete/:id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return this.recruitmentRequestService.remove(id);
   }
 }
