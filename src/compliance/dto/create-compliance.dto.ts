@@ -3,7 +3,9 @@ import {
   IsNotEmpty,
   IsOptional,
   IsDateString,
+  IsInt,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateComplianceDto {
   @IsString()
@@ -26,9 +28,13 @@ export class CreateComplianceDto {
   @IsOptional()
   filing_instructions?: string;
 
+  @IsInt()
   @IsOptional()
+  @Type(() => Number)
   created_by?: number;
 
+  @IsInt()
   @IsOptional()
+  @Type(() => Number)
   updated_by?: number;
 }
