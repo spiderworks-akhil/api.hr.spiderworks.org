@@ -81,6 +81,15 @@ export class DepartmentService {
           createdBy: true,
           updatedBy: true,
           children: { select: { id: true, name: true } },
+          employees: {
+            select: {
+              id: true,
+              name: true,
+              personal_email: true,
+              work_email: true,
+              user_id: true,
+            },
+          },
         },
       }),
       this.prisma.department.count({ where }),
