@@ -1,8 +1,10 @@
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
   IsOptional,
   IsDateString,
+  IsInt,
 } from 'class-validator';
 
 export class CreateBoardMeetingDto {
@@ -30,9 +32,13 @@ export class CreateBoardMeetingDto {
   @IsOptional()
   meeting_minutes?: string;
 
+  @IsInt()
   @IsOptional()
+  @Type(() => Number)
   created_by?: number;
 
+  @IsInt()
   @IsOptional()
+  @Type(() => Number)
   updated_by?: number;
 }
