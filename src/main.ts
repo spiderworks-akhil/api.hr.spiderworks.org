@@ -10,7 +10,11 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://hr.spiderworks.org'],
+    origin: [
+      'http://localhost:3000',
+      'https://hr.spiderworks.org',
+      'https://work.spiderworks.org',
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
