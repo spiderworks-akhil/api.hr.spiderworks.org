@@ -60,6 +60,24 @@ export class EmployeeNoteService {
         skip,
         take: limit,
         orderBy: { id: 'desc' },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
+          updatedBy: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
+        },
       }),
       this.prisma.employeeNote.count({ where }),
     ]);
