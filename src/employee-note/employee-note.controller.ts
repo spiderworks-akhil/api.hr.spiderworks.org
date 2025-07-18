@@ -138,6 +138,18 @@ export class EmployeeNoteController {
 
     for (const [index, record] of records.entries()) {
       try {
+        if (
+          !('ID' in record) ||
+          !('EmployeeId' in record) ||
+          !('Remarks' in record) ||
+          !('Updated_by' in record) ||
+          !('Date' in record)
+        ) {
+          throw new Error(
+            `Row format incorrect at row ${index + 2}: Required columns (ID, EmployeeId, Remarks, Updated_by, Date) are missing`,
+          );
+        }
+
         const dto = {
           id: record.ID,
           employee_id: record.EmployeeId,
