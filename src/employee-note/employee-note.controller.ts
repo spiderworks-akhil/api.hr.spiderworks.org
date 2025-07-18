@@ -180,6 +180,8 @@ export class EmployeeNoteController {
       errors,
       totalProcessed: records.length,
       totalErrors: errors.length,
+      totalImported: results.length,
+      totalNotImported: errors.length,
     };
   }
 
