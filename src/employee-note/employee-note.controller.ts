@@ -154,8 +154,10 @@ export class EmployeeNoteController {
           id: record.ID,
           employee_id: record.EmployeeId,
           notes: record.Remarks,
+          created_by: record.Created_by,
           updated_by: record.Updated_by,
           created_at: record.Date ? parseExcelDate(record.Date) : undefined,
+          updated_at: record.Date ? parseExcelDate(record.Date) : undefined,
         };
 
         if (!dto.id || !dto.employee_id || !dto.notes) {

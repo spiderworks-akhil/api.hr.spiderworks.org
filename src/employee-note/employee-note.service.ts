@@ -35,6 +35,7 @@ export class EmployeeNoteService {
           ? { connect: { id: dto.updated_by } }
           : undefined,
         created_at: dto.created_at ? new Date(dto.created_at) : new Date(),
+        updated_at: dto.updated_at ? new Date(dto.updated_at) : new Date(),
       };
 
       const employeeNote = await this.prisma.employeeNote.create({ data });
@@ -119,6 +120,7 @@ export class EmployeeNoteService {
             ? { connect: { id: dto.updated_by } }
             : { disconnect: true },
         }),
+        updated_at: dto.updated_at ? new Date(dto.updated_at) : new Date(),
       };
 
       const updated = await this.prisma.employeeNote.update({

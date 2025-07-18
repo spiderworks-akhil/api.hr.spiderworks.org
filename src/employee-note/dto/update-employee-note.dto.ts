@@ -29,4 +29,8 @@ export class UpdateEmployeeNoteDto {
   @IsOptional()
   @Type(() => Date)
   created_at?: Date;
+
+  @IsOptional()
+  @Type(() => Date)
+  updated_at?: Date;
 }

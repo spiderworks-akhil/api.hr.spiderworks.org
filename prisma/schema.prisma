@@ -165,7 +165,7 @@ model EmployeeNote {
   created_by  Int?
   updated_by  Int?
   created_at  DateTime
-  updated_at  DateTime @updatedAt
+  updated_at  DateTime
 
   employee  Employee @relation("EmployeeNotes", fields: [employee_id], references: [id])
   createdBy User?    @relation("CreatedEmployeeNoteBy", fields: [created_by], references: [id])
