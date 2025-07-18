@@ -53,15 +53,12 @@ function parseExcelDate(dateVal: any): Date | undefined {
       m = mStr;
       y = yStr;
     } else {
-      console.log('Invalid date format:', datePart);
       return undefined;
     }
     if (isNaN(y) || isNaN(m) || isNaN(d)) {
-      console.log('Invalid date components:', { y, m, d });
       return undefined;
     }
     const result = new Date(Date.UTC(y, m - 1, d, H, M, S));
-    console.log('parseExcelDate string output:', result);
     return result;
   }
 
@@ -78,7 +75,6 @@ function parseExcelDate(dateVal: any): Date | undefined {
         0,
       ),
     );
-    console.log('parseExcelDate number output:', result);
     return result;
   }
 
@@ -94,11 +90,9 @@ function parseExcelDate(dateVal: any): Date | undefined {
         0,
       ),
     );
-    console.log('parseExcelDate Date output:', result);
     return result;
   }
 
-  console.log('Unsupported dateVal type:', typeof dateVal);
   return undefined;
 }
 
@@ -154,7 +148,7 @@ export class EmployeeNoteController {
           id: record.ID,
           employee_id: record.EmployeeId,
           notes: record.Remarks,
-          created_by: record.Created_by,
+          created_by: record.Updated_by,
           updated_by: record.Updated_by,
           created_at: record.Date ? parseExcelDate(record.Date) : undefined,
           updated_at: record.Date ? parseExcelDate(record.Date) : undefined,
