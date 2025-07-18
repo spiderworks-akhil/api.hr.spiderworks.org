@@ -14,7 +14,16 @@ export class EmployeeNoteService {
 
   async create(dto: CreateEmployeeNoteDto) {
     try {
+      let id = dto.id;
+      if (!id) {
+        const max = await this.prisma.employeeNote.findFirst({
+          orderBy: { id: 'desc' },
+          select: { id: true },
+        });
+        id = max?.id ? max.id + 1 : 1;
+      }
       const data: Prisma.EmployeeNoteCreateInput = {
+        id,
         notes: dto.notes,
         employee: {
           connect: { id: dto.employee_id },
@@ -25,6 +34,7 @@ export class EmployeeNoteService {
         updatedBy: dto.updated_by
           ? { connect: { id: dto.updated_by } }
           : undefined,
+        created_at: dto.created_at ? new Date(dto.created_at) : new Date(),
       };
 
       const employeeNote = await this.prisma.employeeNote.create({ data });

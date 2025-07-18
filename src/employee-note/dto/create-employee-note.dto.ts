@@ -2,6 +2,11 @@ import { IsString, IsNotEmpty, IsInt, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateEmployeeNoteDto {
+  @IsInt()
+  @IsOptional()
+  @Type(() => Number)
+  id?: number;
+
   @IsString()
   @IsNotEmpty()
   notes: string;
@@ -20,4 +25,8 @@ export class CreateEmployeeNoteDto {
   @IsOptional()
   @Type(() => Number)
   updated_by?: number;
+
+  @IsOptional()
+  @Type(() => Date)
+  created_at?: Date;
 }

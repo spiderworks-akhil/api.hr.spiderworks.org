@@ -159,12 +159,12 @@ model EmployeePhoto {
 }
 
 model EmployeeNote {
-  id          Int      @id @default(autoincrement())
+  id          Int      @id
   notes       String
   employee_id Int
   created_by  Int?
   updated_by  Int?
-  created_at  DateTime @default(now())
+  created_at  DateTime
   updated_at  DateTime @updatedAt
 
   employee  Employee @relation("EmployeeNotes", fields: [employee_id], references: [id])
