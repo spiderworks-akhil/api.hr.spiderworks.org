@@ -90,8 +90,22 @@ export class EmployeeSalaryRevisionService {
         orderBy: { id: 'desc' },
         include: {
           employee: true,
-          createdBy: true,
-          updatedBy: true,
+          createdBy: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
+          updatedBy: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
         },
       }),
       this.prisma.employeeSalaryRevision.count({ where }),
