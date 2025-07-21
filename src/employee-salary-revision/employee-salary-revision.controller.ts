@@ -71,6 +71,14 @@ export class EmployeeSalaryRevisionController {
     return this.service.update(id, dto);
   }
 
+  @Put('set-active')
+  async setActive(
+    @Body('employee_id', ParseIntPipe) employeeId: number,
+    @Body('salary_revision_id', ParseIntPipe) salaryRevisionId: number,
+  ) {
+    return this.service.setActiveSalaryRevision(employeeId, salaryRevisionId);
+  }
+
   @Delete('delete/:id')
   async delete(@Param('id', ParseIntPipe) id: number) {
     return this.service.remove(id);

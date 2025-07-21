@@ -84,7 +84,7 @@ model Employee {
   providedFeedbacks        PeerFeedback[]              @relation("ProvidedFeedback")
   receivedFeedbacks        PeerFeedback[]              @relation("ReceivedFeedback")
   awardWinners             AwardWinner[]               @relation("EmployeeAwardWinners")
-  salaryRevisions          EmployeeSalaryRevision[]
+  salaryRevisions          EmployeeSalaryRevision[]    @relation("EmployeeSalaryRevisions")
   evaluationsGiven         EmployeeEvaluation[]        @relation("EvaluatorEmployee")
   evaluationsReceived      EmployeeEvaluation[]        @relation("EvaluatedEmployee")
   reviewedPerformanceGoals PerformanceGoal[]           @relation("ReviewedGoals")
@@ -95,6 +95,9 @@ model Employee {
   managerLeaveApplications LeaveApplication[]          @relation("ManagerLeaveApplications")
   hrLeaveApplications      LeaveApplication[]          @relation("HRLeaveApplications")
   leaveLedgers             LeaveLedger[]               @relation("EmployeeLeaveLedger")
+
+  active_salary_revision_id Int?
+  activeSalaryRevision      EmployeeSalaryRevision? @relation("ActiveSalaryRevision", fields: [active_salary_revision_id], references: [id])
 }
 
 model EmployeeDocument {
@@ -368,9 +371,10 @@ model EmployeeSalaryRevision {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  employee  Employee @relation(fields: [employee_id], references: [id])
-  createdBy User?    @relation("CreatedSalaryRevisions", fields: [created_by], references: [id])
-  updatedBy User?    @relation("UpdatedSalaryRevisions", fields: [updated_by], references: [id])
+  employee  Employee   @relation("EmployeeSalaryRevisions", fields: [employee_id], references: [id])
+  createdBy User?      @relation("CreatedSalaryRevisions", fields: [created_by], references: [id])
+  updatedBy User?      @relation("UpdatedSalaryRevisions", fields: [updated_by], references: [id])
+  activeFor Employee[] @relation("ActiveSalaryRevision")
 }
 
 enum EvaluationTemplateStatus {

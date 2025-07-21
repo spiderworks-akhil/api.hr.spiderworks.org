@@ -214,4 +214,20 @@ export class EmployeeSalaryRevisionService {
       );
     }
   }
+
+  async setActiveSalaryRevision(employeeId: number, salaryRevisionId: number) {
+    const revision = await this.prisma.employeeSalaryRevision.findUnique({
+      where: { id: salaryRevisionId },
+    });
+    if (!revision || revision.employee_id !== employeeId) {
+      throw new BadRequestException(
+        'Salary revision does not belong to employee',
+      );
+    }
+    await this.prisma.employee.update({
+      where: { id: employeeId },
+      data: { active_salary_revision_id: salaryRevisionId },
+    });
+    return { message: 'Active salary revision updated successfully' };
+  }
 }
