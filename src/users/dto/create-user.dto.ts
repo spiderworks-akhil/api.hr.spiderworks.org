@@ -31,6 +31,16 @@ export class CreateUserDto {
   @IsOptional()
   phone?: string;
 
+  @IsInt()
+  @IsOptional()
+  @Type(() => Number)
+  created_by?: number;
+
+  @IsInt()
+  @IsOptional()
+  @Type(() => Number)
+  updated_by?: number;
+
   @IsEnum($Enums.UserRole)
   @IsOptional()
   role?: $Enums.UserRole;

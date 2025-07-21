@@ -37,6 +37,12 @@ export class UsersService {
         email: dto.email ?? null,
         phone: dto.phone ?? null,
         role: dto.role ?? $Enums.UserRole.STANDARD_USER,
+        createdBy: dto.created_by
+          ? { connect: { id: dto.created_by } }
+          : undefined,
+        updatedBy: dto.updated_by
+          ? { connect: { id: dto.updated_by } }
+          : undefined,
       };
 
       const user = await this.prisma.user.create({
@@ -115,7 +121,12 @@ export class UsersService {
 
       const updatedUser = await this.prisma.user.update({
         where: { id },
-        data: { role: dto.role },
+        data: {
+          role: dto.role,
+          updatedBy: dto.updated_by
+            ? { connect: { id: dto.updated_by } }
+            : undefined,
+        },
         include: {
           employee: true,
         },

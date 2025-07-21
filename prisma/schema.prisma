@@ -689,6 +689,15 @@ model User {
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
 
+  created_by Int?
+  updated_by Int?
+
+  createdBy User? @relation("UserCreatedBy", fields: [created_by], references: [id])
+  updatedBy User? @relation("UserUpdatedBy", fields: [updated_by], references: [id])
+
+  usersCreated User[] @relation("UserCreatedBy")
+  usersUpdated User[] @relation("UserUpdatedBy")
+
   employee Employee?
 
   createdEmployees Employee[] @relation("EmployeeCreatedBy")
