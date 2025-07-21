@@ -215,7 +215,12 @@ export class EmployeeSalaryRevisionService {
     }
   }
 
-  async setActiveSalaryRevision(employeeId: number, salaryRevisionId: number) {
+  async setActiveSalaryRevision(
+    employeeId: number,
+    salaryRevisionId: number,
+    notes?: string,
+    createdBy?: number,
+  ) {
     const revision = await this.prisma.employeeSalaryRevision.findUnique({
       where: { id: salaryRevisionId },
     });
@@ -228,6 +233,26 @@ export class EmployeeSalaryRevisionService {
       where: { id: employeeId },
       data: { active_salary_revision_id: salaryRevisionId },
     });
+
+    if (notes && createdBy) {
+      const max = await this.prisma.employeeNote.findFirst({
+        orderBy: { id: 'desc' },
+        select: { id: true },
+      });
+      const newId = max?.id ? max.id + 1 : 1;
+      await this.prisma.employeeNote.create({
+        data: {
+          id: newId,
+          notes,
+          is_system: 1,
+          created_at: new Date(),
+          updated_at: new Date(),
+          employee: { connect: { id: employeeId } },
+          createdBy: { connect: { id: createdBy } },
+          updatedBy: { connect: { id: createdBy } },
+        },
+      });
+    }
     return { message: 'Active salary revision updated successfully' };
   }
 }
