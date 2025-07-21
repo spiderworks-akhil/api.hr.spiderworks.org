@@ -349,6 +349,7 @@ model EmployeeSalaryRevision {
   version        Int
   employee_id    Int
   effective_date DateTime?
+  end_date       DateTime?
   basic_pay      Float
 
   tds_deduction_amount Float?

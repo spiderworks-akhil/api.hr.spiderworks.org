@@ -29,6 +29,7 @@ export class EmployeeSalaryRevisionService {
         effective_date: dto.effective_date
           ? new Date(dto.effective_date)
           : undefined,
+        end_date: dto.end_date ? new Date(dto.end_date) : undefined,
         basic_pay: dto.basic_pay,
         tds_deduction_amount: dto.tds_deduction_amount,
         esi_employee_share: dto.esi_employee_share,
@@ -144,6 +145,7 @@ export class EmployeeSalaryRevisionService {
         effective_date: dto.effective_date
           ? new Date(dto.effective_date)
           : undefined,
+        end_date: dto.end_date ? new Date(dto.end_date) : undefined,
         basic_pay: dto.basic_pay,
         tds_deduction_amount: dto.tds_deduction_amount,
         esi_employee_share: dto.esi_employee_share,

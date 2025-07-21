@@ -18,6 +18,10 @@ export class CreateEmployeeSalaryRevisionDto {
   @IsOptional()
   effective_date?: string;
 
+  @IsDateString()
+  @IsOptional()
+  end_date?: string;
+
   @IsNumber()
   basic_pay: number;
 
