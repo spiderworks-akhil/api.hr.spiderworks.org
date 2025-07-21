@@ -66,6 +66,82 @@ export class EmployeesController {
   //     throw new BadRequestException('Only Excel (XLSX) files are supported');
   //   }
 
+  //   function parseExcelDate(dateVal: any): Date | undefined {
+  //     if (!dateVal) {
+  //       return undefined;
+  //     }
+
+  //     if (typeof dateVal === 'string') {
+  //       let y: number,
+  //         m: number,
+  //         d: number,
+  //         H = 0,
+  //         M = 0,
+  //         S = 0;
+  //       const [datePart, timePart] = dateVal.split(' ');
+  //       if (timePart) {
+  //         [H, M, S] = timePart.split(':').map(Number);
+  //       }
+  //       if (datePart.includes('-')) {
+  //         const [yStr, mStr, dStr] = datePart.split('-').map(Number);
+  //         if (yStr > 1000) {
+  //           y = yStr;
+  //           m = mStr;
+  //           d = dStr;
+  //         } else {
+  //           d = yStr;
+  //           m = mStr;
+  //           y = dStr;
+  //         }
+  //       } else if (datePart.includes('/')) {
+  //         const [dStr, mStr, yStr] = datePart.split('/').map(Number);
+  //         d = dStr;
+  //         m = mStr;
+  //         y = yStr;
+  //       } else {
+  //         return undefined;
+  //       }
+  //       if (isNaN(y) || isNaN(m) || isNaN(d)) {
+  //         return undefined;
+  //       }
+  //       const result = new Date(Date.UTC(y, m - 1, d, H, M, S));
+  //       return result;
+  //     }
+
+  //     if (typeof dateVal === 'number') {
+  //       const excelEpoch = new Date(1899, 11, 30);
+  //       const utcDate = new Date(excelEpoch.getTime() + dateVal * 86400000);
+  //       const result = new Date(
+  //         Date.UTC(
+  //           utcDate.getUTCFullYear(),
+  //           utcDate.getUTCMonth(),
+  //           utcDate.getUTCDate(),
+  //           0,
+  //           0,
+  //           0,
+  //         ),
+  //       );
+  //       return result;
+  //     }
+
+  //     if (dateVal instanceof Date) {
+  //       const utcDate = new Date(dateVal.getTime() + 24 * 60 * 60 * 1000);
+  //       const result = new Date(
+  //         Date.UTC(
+  //           utcDate.getUTCFullYear(),
+  //           utcDate.getUTCMonth(),
+  //           utcDate.getUTCDate(),
+  //           0,
+  //           0,
+  //           0,
+  //         ),
+  //       );
+  //       return result;
+  //     }
+
+  //     return undefined;
+  //   }
+
   //   const workbook = XLSX.read(file.buffer, {
   //     type: 'buffer',
   //     cellDates: true,
@@ -77,35 +153,9 @@ export class EmployeesController {
   //   const employees: CreateEmployeeDto[] = [];
 
   //   for (const [index, record] of records.entries()) {
-  //     const parseDate = (
-  //       value: string | number | Date | undefined,
-  //     ): Date | null => {
-  //       if (!value) return null;
-  //       if (value instanceof Date) {
-  //         return isNaN(value.getTime()) ? null : value;
-  //       }
-  //       if (typeof value === 'number') {
-  //         return new Date(XLSX.SSF.format(' yyyy-mm-dd ', value));
-  //       }
-
-  //       const match = String(value).match(/^(\d{2})\/(\d{2})\/(\d{2,4})$/);
-  //       if (match) {
-  //         const [_, month, day, year] = match;
-  //         const fullYear =
-  //           parseInt(year, 10) < 100
-  //             ? parseInt(year, 10) < 50
-  //               ? `20${year}`
-  //               : `19${year}`
-  //             : year;
-  //         const date = new Date(`${fullYear}-${month}-${day}`);
-  //         return isNaN(date.getTime()) ? null : date;
-  //       }
-  //       return null;
-  //     };
-
-  //     const joiningDate = parseDate(record.JoiningDate);
-  //     const confirmationDate = parseDate(record.confirmationDate);
-  //     const releavingDate = parseDate(record.ReleavingDate);
+  //     const joiningDate = parseExcelDate(record.JoiningDate);
+  //     const confirmationDate = parseExcelDate(record.confirmationDate);
+  //     const releavingDate = parseExcelDate(record.ReleavingDate);
 
   //     if (record.JoiningDate && !joiningDate) {
   //       throw new BadRequestException(
