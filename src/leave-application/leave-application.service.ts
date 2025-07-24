@@ -13,6 +13,7 @@ import {
   ApprovalStatus,
   LeaveType,
 } from './dto/leave-application-enums.dto';
+import { CreateLeaveApplicationByUserDto } from './dto/create-leave-application-by-user.dto';
 
 @Injectable()
 export class LeaveApplicationService {
@@ -107,6 +108,104 @@ export class LeaveApplicationService {
     }
   }
 
+  async add(dto: CreateLeaveApplicationByUserDto) {
+    if (
+      dto.start_date &&
+      dto.end_date &&
+      new Date(dto.end_date) < new Date(dto.start_date)
+    ) {
+      throw new BadRequestException('End date cannot be before start date');
+    }
+
+    if (dto.manager_id === dto.hr_id && dto.manager_id !== null) {
+      throw new BadRequestException('Manager ID and HR ID cannot be the same');
+    }
+
+    try {
+      const employee = await this.prisma.employee.findUnique({
+        where: { user_id: dto.user_id },
+        select: { id: true },
+      });
+
+      if (!employee) {
+        throw new BadRequestException(
+          'No employee found for the provided user ID',
+        );
+      }
+
+      let count: number | undefined = dto.count;
+
+      if (dto.start_date && dto.end_date) {
+        const start = new Date(dto.start_date);
+        const end = new Date(dto.end_date);
+
+        start.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0);
+        const diffTime = end.getTime() - start.getTime();
+        count = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      }
+
+      const data: Prisma.LeaveApplicationCreateInput = {
+        employee: { connect: { id: employee.id } },
+        attendance_type: dto.attendance_type,
+        leave_type: dto.leave_type,
+        reason: dto.reason,
+        start_date: dto.start_date ? new Date(dto.start_date) : undefined,
+        end_date: dto.end_date ? new Date(dto.end_date) : undefined,
+        count: count,
+        manager: dto.manager_id
+          ? { connect: { id: dto.manager_id } }
+          : undefined,
+        manager_approval_status: dto.manager_approval_status,
+        manager_review_date: dto.manager_review_date
+          ? new Date(dto.manager_review_date)
+          : undefined,
+        manager_remarks: dto.manager_remarks,
+        hr: dto.hr_id ? { connect: { id: dto.hr_id } } : undefined,
+        hr_approval_status: dto.hr_approval_status,
+        hr_review_date: dto.hr_review_date
+          ? new Date(dto.hr_review_date)
+          : undefined,
+        hr_remarks: dto.hr_remarks,
+        createdBy: dto.created_by
+          ? { connect: { id: dto.created_by } }
+          : undefined,
+        updatedBy: dto.updated_by
+          ? { connect: { id: dto.updated_by } }
+          : undefined,
+      };
+
+      const leaveApplication = await this.prisma.$transaction(
+        async (prisma) => {
+          const application = await prisma.leaveApplication.create({
+            data,
+            include: {
+              employee: { select: { id: true, name: true } },
+              manager: { select: { id: true, name: true } },
+              hr: { select: { id: true, name: true } },
+              createdBy: {
+                select: { id: true, first_name: true, last_name: true },
+              },
+              updatedBy: {
+                select: { id: true, first_name: true, last_name: true },
+              },
+            },
+          });
+          return application;
+        },
+      );
+
+      return {
+        message: 'Leave application created successfully',
+        leaveApplication,
+      };
+    } catch (error) {
+      throw new BadRequestException(
+        error.message || 'Failed to create leave application',
+      );
+    }
+  }
+
   async findAll(
     page: number,
     limit: number,
@@ -130,6 +229,89 @@ export class LeaveApplicationService {
     if (to) {
       toDate = new Date(to);
       toDate.setUTCHours(23, 59, 59, 999);
+    }
+
+    const where: Prisma.LeaveApplicationWhereInput = {
+      ...(employeeId && { employee_id: employeeId }),
+      ...(leaveType && { leave_type: leaveType }),
+      ...(attendanceType && { attendance_type: attendanceType }),
+      ...(approvalStatus && {
+        OR: [
+          { manager_approval_status: approvalStatus },
+          { hr_approval_status: approvalStatus },
+        ],
+      }),
+      ...(fromDate || toDate
+        ? {
+            AND: [
+              fromDate ? { start_date: { gte: fromDate } } : {},
+              toDate ? { end_date: { lte: toDate } } : {},
+            ],
+          }
+        : {}),
+    };
+
+    const [leaveApplications, total] = await Promise.all([
+      this.prisma.leaveApplication.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { id: 'desc' },
+        include: {
+          employee: { select: { id: true, name: true } },
+          manager: { select: { id: true, name: true } },
+          hr: { select: { id: true, name: true } },
+          createdBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+          updatedBy: {
+            select: { id: true, first_name: true, last_name: true },
+          },
+        },
+      }),
+      this.prisma.leaveApplication.count({ where }),
+    ]);
+
+    return { leaveApplications, total, page, limit };
+  }
+
+  async listAll(
+    page: number,
+    limit: number,
+    userId?: number,
+    leaveType?: LeaveType,
+    from?: string,
+    to?: string,
+    attendanceType?: AttendanceType,
+    approvalStatus?: ApprovalStatus,
+  ) {
+    const skip = (page - 1) * limit;
+
+    let fromDate: Date | undefined;
+    let toDate: Date | undefined;
+
+    if (from) {
+      fromDate = new Date(from);
+      fromDate.setUTCHours(0, 0, 0, 0);
+    }
+
+    if (to) {
+      toDate = new Date(to);
+      toDate.setUTCHours(23, 59, 59, 999);
+    }
+
+    let employeeId: number | undefined;
+    if (userId) {
+      const employee = await this.prisma.employee.findUnique({
+        where: { user_id: userId },
+        select: { id: true },
+      });
+      if (!employee) {
+        throw new BadRequestException(
+          'No employee found for the provided user ID',
+        );
+      }
+      employeeId = employee.id;
     }
 
     const where: Prisma.LeaveApplicationWhereInput = {
